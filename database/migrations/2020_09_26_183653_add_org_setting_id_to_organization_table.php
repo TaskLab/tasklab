@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddOrgIdToUsersTable extends Migration
+class AddOrgSettingIdToOrganizationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class AddOrgIdToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('organization_id')
+        Schema::table('organization', function (Blueprint $table) {
+            $table->unsignedInteger('organization_setting_id')
                 ->references('id')
-                ->on('organization')
-                ->after('password');
+                ->on('organization_settings')
+                ->after('org_name');
         });
     }
 
@@ -28,8 +28,8 @@ class AddOrgIdToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('organization_id');
+        Schema::table('organization', function (Blueprint $table) {
+            $table->dropColumn('organization_setting_id');
         });
     }
 }
