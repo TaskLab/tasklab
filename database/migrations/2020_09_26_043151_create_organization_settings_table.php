@@ -15,7 +15,9 @@ class CreateOrganizationSettingsTable extends Migration
     {
         Schema::create('organization_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('point_of_contact_user_id')->constrained('users');
+            $table->unsignedInteger('point_of_contact_id')
+                ->references('id')
+                ->on('users');
             $table->timestamps();
         });
     }
