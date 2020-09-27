@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -20,6 +20,12 @@ class LoginController extends Controller
             'email'    => 'required',
             'password' => 'required'
         ]);
+
+        if (!$valid) {
+            return response()->json([
+                'status' => 'Invalid email and/or password'
+            ], 422);
+        }
 
         if (Auth::attempt($request->only('email', 'password'))) {
             return redirect('/');

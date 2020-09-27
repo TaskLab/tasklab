@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -20,7 +20,9 @@ class OrganizationSetting extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'point_of_contact_id'
+    ];
 
     /**
      * Org relationship

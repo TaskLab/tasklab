@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OrganizationController;
 
 use Inertia\Inertia;
 
@@ -21,4 +22,8 @@ Route::get('/', function () {
 });
 
 Route::post('/login', [LoginController::class, 'login']);
+
+Route::prefix('org')->middleware('auth')->group(function () {
+    Route::post('create', [OrganizationController::class, 'create']);
+});
 
