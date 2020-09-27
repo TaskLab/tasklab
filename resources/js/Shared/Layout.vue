@@ -28,6 +28,6 @@
   }
 
   body {
-    background: rgb(234, 236, 238);
+    background: rgb(213, 216, 220);
   }
 </style>
