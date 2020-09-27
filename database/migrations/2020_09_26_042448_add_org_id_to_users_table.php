@@ -17,6 +17,7 @@ class AddOrgIdToUsersTable extends Migration
             $table->unsignedInteger('organization_id')
                 ->references('id')
                 ->on('organization')
+                ->nullable()
                 ->after('password');
         });
     }
