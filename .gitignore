@@ -2,7 +2,7 @@
 /public/hot
 /public/storage
 /public/css/app.css
-/public/js/app.js
+/public/js/*
 /storage/*.key
 /vendor
 .editorconfig
@@ -14,3 +14,4 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+package-lock.json
