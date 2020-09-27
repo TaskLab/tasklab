@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "802901ac58e671aff64301a7b6d3bd93",
+    "content-hash": "7b56bfb5d21eaae286e532c3ed2f8941",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -830,66 +830,6 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
-        },
-        {
-            "name": "inertiajs/inertia-laravel",
-            "version": "v0.2.12",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/inertiajs/inertia-laravel.git",
-                "reference": "4f0e1ef6410276ebb4ae6e958e73e9339de2c0cf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/4f0e1ef6410276ebb4ae6e958e73e9339de2c0cf",
-                "reference": "4f0e1ef6410276ebb4ae6e958e73e9339de2c0cf",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^5.4|^6.0|^7.0|^8.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "~3.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Inertia\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Inertia\\": "src"
-                },
-                "files": [
-                    "./helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan Reinink",
-                    "email": "jonathan@reinink.ca",
-                    "homepage": "https://reinink.ca"
-                }
-            ],
-            "description": "The Laravel adapter for Inertia.js.",
-            "keywords": [
-                "inertia",
-                "laravel"
-            ],
-            "funding": [
-                {
-                    "url": "https://github.com/reinink",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-09-17T15:38:25+00:00"
         },
         {
             "name": "laravel/framework",
