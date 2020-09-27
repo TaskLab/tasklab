@@ -2,22 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class LoginTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testLoginAndAuth()
+    public function testLoginAndAuth(): void
     {
 
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $p = $user->password;
         $user->password = Hash::make($user->password);
         $user->save();
