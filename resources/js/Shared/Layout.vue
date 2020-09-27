@@ -20,3 +20,14 @@
     </section>
   </main>
 </template>
+
+<style>
+  * {
+    font-family: 'Nunito';
+    box-sizing: border-box;
+  }
+
+  body {
+    background: rgb(234, 236, 238);
+  }
+</style>

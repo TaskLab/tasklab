@@ -1,0 +1,27 @@
+@import '_mixins';
+
+%abs-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include transform(translate(-50%,-50%));
+}
+
+%abs-vert-center {
+    position: absolute;
+    top: 50%;
+    @include transform(translateY(-50%));
+}
+
+%abs-horiz-center {
+    position: absolute;
+    left: 50%;
+    @include transform(translateX(-50%));
+}
+
+%pos-relative {
+    position: relative;
+    top: 0;
+    left: 0;
+    @include transform(none);
+}

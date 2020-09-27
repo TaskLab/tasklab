@@ -6,20 +6,26 @@
 
 <template>
   <header id='app-header'>
-    <h1 class='text-center'>tasklab</h1>
+    <h3 class='text-center font-weight-bold'>
+      <inertia-link href='/' class='text-light'>tasklab</inertia-link>
+    </h3>
   </header>
 </template>
 
-<style scoped>
+<style lang='scss' scoped>
   #app-header {
     width: 100%;
     height: 60px;
-    background: rgb(48, 63, 109);
-  }
+    background: #00203FFF;
 
-  #app-header h1 {
-    color: #fff;
-    margin: 0;
-    line-height: 60px;
+    h3 {
+      color: #fff;
+      margin: 0;
+      line-height: 60px;
+
+      a {
+        text-decoration: none;
+      }
+    }
   }
 </style>
