@@ -1,5 +1,6 @@
-<script>
-  import Header from './Header'
+<script lang='ts'>
+  import Header from './Header.vue'
+  import Vue from 'vue'
 
   export default {
     name: 'Layout',
