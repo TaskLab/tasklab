@@ -12,8 +12,24 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         output: {
             chunkFilename: 'js/[name].js?id=[chunkhash]'
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.scss$/,
+                    use: [
+                        {
+                            loader: 'sass-resources-loader',
+                            options: {
+                                resources: 'resources/sass/app.scss'
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     })
