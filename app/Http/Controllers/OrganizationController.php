@@ -20,6 +20,27 @@ class OrganizationController extends Controller
 {
 
     /**
+     * Disable an organization
+     *
+     * @param Request $request
+     * @param integer $orgId
+     * @return JsonResponse
+     */
+    public function delete(Request $request, int $orgId): JsonResponse 
+    {
+        $org = Organization::findOrFail($orgId);
+        $org->active = false;
+        $org->save();
+
+        // @todo send email to POC letting them know or for a confirmation?
+        // Future code. For now it will disable when we want.
+
+        return response()->json([
+            'status' => 'Organization successfully disabled.'
+        ]);
+    }
+
+    /**
      * Create a new Org.
      *
      * @param Request $request
@@ -44,22 +65,7 @@ class OrganizationController extends Controller
             ], 403);
         }
 
-        DB::transaction(function () use ($request): void {
-            $orgSetting = OrganizationSetting::create([
-                'point_of_contact_id' => Auth::user()->id
-            ]);
-    
-            $orgRecord = [
-                'org_name'                => $request->org_name,
-                'organization_setting_id' => $orgSetting->id,
-                'active'                  => true
-            ];
-            $org = Organization::create($orgRecord);
-    
-            User::where('id', 1)->update([
-                'organization_id' => $org->id
-            ]);
-        });
+        (new Organization)->createNewOrg($request->org_name, Auth::user()->id);
 
         return response()->json([
             'status' => "Org was created successfully."

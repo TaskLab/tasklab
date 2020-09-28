@@ -2,11 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Models\Organization;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+
+use App\Models\{
+    Organization,
+    User
+};
+
+use Illuminate\Support\Facades\{
+    Auth,
+    Hash
+};
 
 class OrgTest extends TestCase
 {
@@ -37,7 +44,7 @@ class OrgTest extends TestCase
      */
     public function testInvalidPayloadOrgCreation(): void 
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->json(
             'POST', 
             '/org/create', 
@@ -53,7 +60,7 @@ class OrgTest extends TestCase
      */
     public function testAlreadyInOrgOrgCreation(): void 
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $user->organization_id = 1;
         $user->save();
 
@@ -72,7 +79,7 @@ class OrgTest extends TestCase
      */
     public function testInitialOrgCreation(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $response = $this->actingAs($user)->json(
             'POST', 
             '/org/create', 
@@ -83,4 +90,22 @@ class OrgTest extends TestCase
         $org = Organization::where('org_name', $this->payload['org_name'])->exists();
         $this->assertTrue($org);
     }
+
+    /**
+     * Test disabling an org
+     *
+     * @return void
+     */
+    public function testDisablingOrg(): void 
+    {
+        $org = Organization::factory()->create();
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->json(
+            'GET', 
+            "/org/delete/{$org->id}"
+        );
+        $response->assertStatus(200);
+    }
+
 }
