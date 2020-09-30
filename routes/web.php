@@ -1,8 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\OrganizationController;
+
+use App\Http\Controllers\{
+    LoginController,
+    RegisterController,
+    OrganizationController
+};
 
 use Inertia\Inertia;
 
@@ -27,3 +31,5 @@ Route::prefix('org')->middleware('auth')->group(function () {
     Route::post('create', [OrganizationController::class, 'create']);
 });
 
+Route::get('/register', [RegisterController::class, 'showRegister']);
+Route::post('/register', [RegisterController::class, 'register']);
