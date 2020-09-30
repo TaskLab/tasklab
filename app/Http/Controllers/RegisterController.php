@@ -16,9 +16,4 @@ class RegisterController extends Controller
     {
         return Inertia::render('Register');
     }
-
-    public function register(Request $request): InertiaResponse
-    {
-        dd($request->all());
-    }
 }

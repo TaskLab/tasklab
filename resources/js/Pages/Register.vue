@@ -4,6 +4,7 @@
 
   interface RegisterData {
     firstname: string,
+    focusIndex: number,
     lastname: string,
     username: string,
     email: string,
@@ -19,6 +20,7 @@
     data(): RegisterData {
       return {
         firstname: '',
+        focusIndex: 0,
         lastname: '',
         username: '',
         email: '',
@@ -33,41 +35,41 @@
             type: 'text',
             name: 'firstname',
             required: true,
-            placeholder: 'First Name',
+            heading: 'First Name',
             value: this.firstname
           },
           {
             type: 'text',
             name: 'lastname',
             required: true,
-            placeholder: 'Last Name',
+            heading: 'Last Name',
             value: this.lastname
           },
           {
             type: 'text',
             name: 'username',
             required: true,
-            placeholder: 'Username',
+            heading: 'Username',
             value: this.username
           },
           {
             type: 'text',
             name: 'email',
             required: true,
-            placeholder: 'Email',
+            heading: 'Email',
             value: this.email
           },
           {
             type: 'text',
             name: 'organization',
-            placeholder: 'Organization',
+            heading: 'Organization',
             value: this.organization
           },
           {
             type: 'password',
             name: 'password',
             required: true,
-            placeholder: 'Password',
+            heading: 'Password',
             value: this.password
           }
         ]
@@ -84,7 +86,7 @@
         }
 
         if (this.hasInvalidEmailFormat()) {
-          throw new Error('Please fill all required fields with at least 5 characters and valid email.');
+          throw new Error('Please use a valid email.');
         }
 
         const payload: any = {
@@ -139,7 +141,7 @@
   <Layout>
     <div id='registration-page'>
       <section id='center-module' class='mw-100'>
-        <section id='app-summary' class='pt-4 px-4'>
+        <section id='app-summary' class='px-4'>
           <h3>what is lorem ipsum</h3>
           <p class='mb-5'>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
           <h3>why do we use it</h3>
@@ -148,16 +150,28 @@
           <p>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
         </section>
         <form class='p-3 rounded'>
-          <input
+          <label
             :key='key'
-            :type='el.type'
-            :name='el.name'
-            :value='el.value'
-            :autofocus='key === 0'
-            :placeholder='el.placeholder'
-            v-for='(el, key) in elements'
-            @keyup='updateFieldValue(el.name, $event)'
-            class='d-block p-3 mb-3 w-100 rounded'/>
+            class='mb-3 w-100'
+            v-for='(el, key) in elements'>
+            <span :class="{ active: (key === focusIndex || el.value.trim() !== '')}">
+              {{ el.heading }}
+              <span v-if="el.value.trim() !== ''">&nbsp;<i class='fas fa-check'></i></span>
+              <span
+                class='font-weight-bold'
+                v-if="key !== focusIndex && el.value.trim() === '' && el.required === true">*</span>
+            </span>
+            <input
+              :type='el.type'
+              :name='el.name'
+              :value='el.value'
+              :autofocus='key === 0'
+              @blur='focusIndex = null'
+              @focus='focusIndex = key'
+              :spellcheck='false'
+              @keyup='updateFieldValue(el.name, $event)'
+              class='d-block pt-3 pb-2 pr-3 w-100'/>
+          </label>
           <button type='button' class='btn btn-primary d-block p-3 w-100' @click='registerHandler'>Register</button>
         </form>
       </section>
@@ -183,13 +197,49 @@
       @include transform(translate(-50%, -50%));
 
       form {
-        @include boxShadow(0 0 10px rgba(0,0,0,0.2));
+        box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.4), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
 
-        input {
-          border: 1px solid rgba(0,0,0,0.1);
+        label {
+          position: relative;
 
-          &:active, &:focus {
-            outline: none;
+          input {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background: transparent !important;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                transition: background-color 5000s ease-in-out 0s;
+            }
+
+            &:active, &:focus {
+              outline: none;
+            }
+          }
+
+          > span {
+            position: absolute;
+            top: 14px;
+            left: 2px;
+            @include transition(all 0.1s ease-out);
+
+            &.active {
+              font-size: 0.7rem;
+              color: rgba(0,0,0,0.5);
+              @include transform(translateY(-14px));
+            }
+
+            span:first-of-type i {
+              color: #28a745;
+            }
+
+            span {
+              color: #dc3545;
+            }
           }
         }
       }
