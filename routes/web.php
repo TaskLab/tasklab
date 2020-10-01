@@ -22,13 +22,17 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    // welcome and sign-up page.
     return Inertia::render('Home');
-});
+})->name('/');
+
+// Protect task related routes with:
+// middleware(['auth','auth.org'])
 
 Route::post('/login', [LoginController::class, 'login']);
-
 Route::prefix('org')->middleware('auth')->group(function () {
     Route::post('create', [OrganizationController::class, 'create']);
+    Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
 });
 
 Route::get('/register', [RegisterController::class, 'showRegister']);
