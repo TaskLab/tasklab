@@ -172,7 +172,12 @@
               @keyup='updateFieldValue(el.name, $event)'
               class='d-block pt-3 pb-2 pr-3 w-100'/>
           </label>
-          <button type='button' class='btn btn-primary d-block p-3 w-100' @click='registerHandler'>Register</button>
+          <button
+            type='button'
+            class='btn text-light d-block p-3 w-100'
+            @click='registerHandler'>
+            Register
+          </button>
         </form>
       </section>
     </div>
@@ -183,7 +188,7 @@
   #registration-page {
     width: 100vw;
     min-height: calc(100vh - 60px);
-    background: #d5d8dc;
+    background: rgb(234, 236, 238);
     position: relative;
 
     #center-module {
@@ -197,7 +202,7 @@
       @include transform(translate(-50%, -50%));
 
       form {
-        box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.4), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
+        box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
 
         label {
           position: relative;
@@ -218,6 +223,7 @@
 
             &:active, &:focus {
               outline: none;
+              border-bottom: 1px solid #00203FFF;
             }
           }
 
@@ -241,6 +247,10 @@
               color: #dc3545;
             }
           }
+        }
+
+        button {
+          background: #00203FFF;
         }
       }
     }
