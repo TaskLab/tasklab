@@ -6,7 +6,6 @@
     firstname: string,
     focusIndex: number,
     lastname: string,
-    username: string,
     email: string,
     organization: string,
     password: string
@@ -17,12 +16,19 @@
     components: {
       Layout
     },
+    props: {
+      error: {
+        type: String
+      },
+      success: {
+        type: String
+      }
+    },
     data(): RegisterData {
       return {
         firstname: '',
         focusIndex: 0,
         lastname: '',
-        username: '',
         email: '',
         organization: '',
         password: ''
@@ -47,13 +53,6 @@
           },
           {
             type: 'text',
-            name: 'username',
-            required: true,
-            heading: 'Username',
-            value: this.username
-          },
-          {
-            type: 'text',
             name: 'email',
             required: true,
             heading: 'Email',
@@ -75,6 +74,18 @@
         ]
       }
     },
+    watch: {
+      error() {
+        if (this.error !== undefined) {
+          alert(this.error);
+        }
+      },
+      success() {
+        if (this.success !== undefined) {
+          alert(this.success);
+        }
+      }
+    },
     methods: {
       getValidatedPayload(): string {
         if (this.hasEmptyRequiredFields()) {
@@ -92,7 +103,6 @@
         const payload: any = {
           firstname: this.firstname,
           lastname: this.lastname,
-          username: this.username,
           email: this.email,
           organization: this.organization,
           password: this.password
@@ -143,9 +153,9 @@
       <section id='center-module' class='mw-100'>
         <section id='app-summary' class='px-4'>
           <h3>what is lorem ipsum</h3>
-          <p class='mb-5'>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+          <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
           <h3>why do we use it</h3>
-          <p class='mb-5'>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
+          <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
           <h3>where can i get some</h3>
           <p>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
         </section>
