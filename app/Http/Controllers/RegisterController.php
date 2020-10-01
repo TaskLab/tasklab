@@ -65,30 +65,13 @@ class RegisterController extends AppController
      */
     private function submitRegistrationPayload(array $payload): void
     {
-        DB::transaction(function () use ($payload): void {
-            $user = User::create([
-                'name'     => $payload['firstname'] . ' ' . $payload['lastname'],
-                'email'    => $payload['email'],
-                'password' => Hash::make($payload['password'])
-            ]);
+        $user = User::create([
+            'name'     => $payload['firstname'] . ' ' . $payload['lastname'],
+            'email'    => $payload['email'],
+            'password' => Hash::make($payload['password'])
+        ]);
 
-            if (isset($payload['organization'])) {
-                $orgSetting = OrganizationSetting::create([
-                    'point_of_contact_id' => $user->id
-                ]);
-
-                $org = Organization::create([
-                    'org_name'                => $payload['organization'],
-                    'organization_setting_id' => $orgSetting->id,
-                    'active'                  => 1
-                ]);
-
-                User::where('id', $user->id)
-                    ->update([
-                        'organization_id' => $org->id
-                    ]);
-            }
-        });
+        (new Organization)->createNewOrg($payload['organization'], $user->id);
     }
 
     /**

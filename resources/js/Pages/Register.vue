@@ -116,7 +116,8 @@
           this.$inertia.post('/register', payload, {
             replace: false,
             preserveState: true,
-            preserveScroll: false
+            preserveScroll: false,
+            _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
           });
         } catch (e) {
           alert(e.message);
