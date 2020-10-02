@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -45,7 +46,14 @@ class RegisterController extends AppController
     {
         try {
             $payload = $this->getValidatedRegistrationPayload($request->json()->all());
-            $this->submitRegistrationPayload($payload);
+            $user = $this->submitRegistrationPayload($payload);
+
+            if (!Auth::attempt(['email' => $user->email, 'password' => $payload['password']])) {
+                return Inertia::render('Register', [
+                    'error' => 'Failed logging into your new account.'
+                ]);
+            }
+
         } catch (Exception $e) {
             return Inertia::render('Register', [
                 'error' => $e->getMessage()
@@ -63,7 +71,7 @@ class RegisterController extends AppController
      * @param array $payload
      * @return void
      */
-    private function submitRegistrationPayload(array $payload): void
+    private function submitRegistrationPayload(array $payload): User
     {
         $user = User::create([
             'name'     => $payload['firstname'] . ' ' . $payload['lastname'],
@@ -72,6 +80,8 @@ class RegisterController extends AppController
         ]);
 
         (new Organization)->createNewOrg($payload['organization'], $user->id);
+
+        return $user;
     }
 
     /**

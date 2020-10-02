@@ -26,6 +26,10 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('/');
 
+Route::get('/missing-org', function () {
+    return Inertia::render('MissingOrg');
+})->middleware('auth')->name('missing-org');
+
 // Protect task related routes with:
 // middleware(['auth','auth.org'])
 

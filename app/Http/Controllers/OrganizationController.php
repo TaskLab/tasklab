@@ -14,11 +14,11 @@ use Illuminate\Http\{
 };
 
 use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class OrganizationController extends Controller
 {
-
     /**
      * Disable an organization
      *
@@ -48,27 +48,20 @@ class OrganizationController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
-        
-        $valid = $request->validate([
-            'org_name' => 'required|max:255'
-        ]);
-
-        if (!$valid) {
-            return response()->json([
-                'status' => 'Missing or invalid org_name'
-            ], 422);
+        $options = $request->json()->all();
+        if ($options['is_org']) {
+            (new Organization)->createNewOrg($options['value'], Auth::user()->id);
+        } else {
+            $org = Organization::whereHas('organizationSetting', function (Builder $query) use ($request) {
+                $query->where('org_key', $options['value']);
+            })->firstOrFail();
+            
+            User::where('id', Auth::user()->id)->update([
+                'organization_id' => $org->id
+            ]);
         }
 
-        if (Auth::user()->organization_id !== null) {
-            return response()->json([
-                'status' => 'Cannot create new org, you\'re already in an org.'
-            ], 403);
-        }
-
-        (new Organization)->createNewOrg($request->org_name, Auth::user()->id);
-
-        return response()->json([
-            'status' => "Org was created successfully."
-        ]);
+        // redirect to tasks home page.
+        return redirect('/');
     }
 }

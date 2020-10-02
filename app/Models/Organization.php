@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\{
     BelongsToMany,
     HasOne
@@ -37,8 +38,10 @@ class Organization extends Model
     public function createNewOrg(string $orgName, int $userId): bool 
     {
         DB::transaction(function () use ($orgName, $userId): void {
+            $orgKey = $this->getRandomOrgKey();
             $orgSetting = OrganizationSetting::create([
-                'point_of_contact_id' => $userId
+                'point_of_contact_id' => $userId,
+                'org_key'             => $orgKey
             ]);
     
             $orgRecord = [
@@ -74,5 +77,20 @@ class Organization extends Model
     public function organizationSetting(): HasOne
     {
         return $this->hasOne(OrganizationSetting::class, 'id', 'organization_setting_id');
+    }
+
+    /**
+     * Help generate random Organization Key.
+     *
+     * @return string
+     */
+    private function getRandomOrgKey(): string 
+    {
+        $random = Str::random(8);
+        while (OrganizationSetting::where('org_key', $random)->exists()) {
+            $random = Str::random(8);
+        }
+
+        return strtoupper($random);
     }
 }
