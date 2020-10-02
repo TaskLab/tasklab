@@ -3,6 +3,7 @@
   import Vue from 'vue'
 
   interface RegisterData {
+    verifypassword: string,
     firstname: string,
     focusIndex: number,
     lastname: string,
@@ -26,6 +27,7 @@
     },
     data(): RegisterData {
       return {
+        verifypassword: '',
         firstname: '',
         focusIndex: 0,
         lastname: '',
@@ -70,6 +72,13 @@
             required: true,
             heading: 'Password',
             value: this.password
+          },
+          {
+            type: 'password',
+            name: 'verifypassword',
+            required: true,
+            heading: 'Verify Password',
+            value: this.verifypassword
           }
         ]
       }
@@ -105,7 +114,8 @@
           lastname: this.lastname,
           email: this.email,
           organization: this.organization,
-          password: this.password
+          password: this.password,
+          verifypassword: this.verifypassword
         };
 
         return JSON.stringify(payload);
@@ -131,7 +141,9 @@
       },
       hasFieldsUnderFiveChars(): boolean {
         return this.elements
-          .filter((el: any): any => el.hasOwnProperty('required'))
+          .filter(
+            (el: any): any => el.hasOwnProperty('required') && (el.name !== 'firstname' && el.name !== 'lastname')
+          )
           .map((el: any): string => el.value)
           .some((val: string): boolean => val.length < 5);
       },
@@ -167,7 +179,11 @@
             v-for='(el, key) in elements'>
             <span :class="{ active: (key === focusIndex || el.value.trim() !== '')}">
               {{ el.heading }}
-              <span v-if="el.value.trim() !== ''">&nbsp;<i class='fas fa-check'></i></span>
+              <span v-if="el.value.trim() !== '' && el.name !== 'verifypassword'">&nbsp;<i class='fas fa-check'></i></span>
+              <span v-if="el.value.trim() !== '' && el.name === 'verifypassword'">&nbsp;
+                <i v-if='password === verifypassword' class='fas fa-check'></i>
+                <i v-if='password !== verifypassword' class='fas fa-times red'></i>
+              </span>
               <span
                 class='font-weight-bold'
                 v-if="key !== focusIndex && el.value.trim() === '' && el.required === true">*</span>
@@ -265,5 +281,9 @@
         }
       }
     }
+  }
+
+  .red {
+    color: #dc3545!important; 
   }
 </style>
