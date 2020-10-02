@@ -15,7 +15,7 @@ class CreateTaskCreationTypesTable extends Migration
     {
         Schema::create('task_creation_types', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('creation_type');
         });
     }
 
