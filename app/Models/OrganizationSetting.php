@@ -21,7 +21,8 @@ class OrganizationSetting extends Model
      * @var array
      */
     protected $fillable = [
-        'point_of_contact_id'
+        'point_of_contact_id',
+        'org_key'
     ];
 
     /**
