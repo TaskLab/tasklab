@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaskCreationTypesTable extends Migration
+class AddCreateTypeToTaskCreationTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTaskCreationTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_creation_types', function (Blueprint $table) {
+        Schema::table('task_creation_types', function (Blueprint $table) {
             $table->string('creation_type');
         });
     }
@@ -25,6 +25,8 @@ class CreateTaskCreationTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_creation_types');
+        Schema::table('task_creation_types', function (Blueprint $table) {
+            $table->dropColumn('creation_type');
+        });
     }
 }
