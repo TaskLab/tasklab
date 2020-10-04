@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Http\{
+    Request,
+    RedirectResponse
+};
+
+use Illuminate\Support\Facades\{
+    Auth,
+    Validator
+};
+
 use Inertia\{
     Inertia,
     Response as InertiaResponse
@@ -23,28 +32,54 @@ class LoginController extends Controller
     }
 
     /**
-     * Authenticate
+     * authenticate
      *
      * @param Request $request
-     * @return RedirectResponse|JsonResponse
+     * @return InertiaResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): InertiaResponse
     {
-        $valid = $request->validate([
-            'email'    => 'required',
-            'password' => 'required'
-        ]);
+        try {
+            $credentials = $this->getValidatedLoginCredentials($request->json()->all());
+            if (Auth::attempt($credentials)) {
+                return Inertia::render('Home');
+            } else {
+                throw new Exception('Invalid login credentials.');
+            }
+        } catch (Exception $e) {
+            return Inertia::render('Login', [
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 
-        if (!$valid) {
-            return response()->json([
-                'status' => 'Invalid email and/or password'
-            ], 422);
+    private function getValidatedLoginCredentials(array $credentials): array
+    {
+        $errorMessages = [
+            'required' => 'The :attribute field is required.',
+            'email'    => 'The :attribute provided is not valid.',
+            'string'   => 'The :attribute must be a string.'
+        ];
+
+        $validator = Validator::make($credentials, [
+            'email' => 'required|email:rfc',
+            'password' => 'required|string'
+        ], $errorMessages);
+
+        if ($validator->fails()) {
+            $msgs = Arr::flatten(
+                array_values($validator->errors()->getMessages())
+            );
+
+            foreach ($msgs as $key => $msg) {
+                $errorMessages .= ($key !== (count($msgs) - 1))
+                    ? $msg . "\n"
+                    : $msg;
+            }
+
+            throw new Exception($errorMessages);
         }
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect('/');
-        }
-
-        return response()->json(['status' => 'Login failed.'], 401);
+        return $credentials;
     }
 }

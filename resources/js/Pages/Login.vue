@@ -4,7 +4,7 @@
 
   interface LoginData {
     email: string,
-    focusIndex: number,
+    focusIndex: number|null,
     password: string
   }
 
@@ -32,7 +32,7 @@
           },
           {
             type: 'password',
-            name: 'email',
+            name: 'password',
             required: true,
             heading: 'Password',
             value: this.password
@@ -60,7 +60,7 @@
       loginHandler(): void {
         try {
           const payload: string = this.getValidatedPayload();
-          this.$inertia.post('/register', payload, {
+          this.$inertia.post('/login', payload, {
             replace: false,
             preserveState: true,
             preserveScroll: false,

@@ -24,7 +24,7 @@ use Inertia\Inertia;
 Route::get('/', function () {
     // welcome and sign-up page.
     return Inertia::render('Home');
-})->name('/');
+})->name('home');
 
 Route::get('/missing-org', function () {
     return Inertia::render('MissingOrg');
