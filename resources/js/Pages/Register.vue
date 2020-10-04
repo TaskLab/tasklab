@@ -37,7 +37,7 @@
       }
     },
     computed: {
-      elements() {
+      elements(): any[] {
         return [
           {
             type: 'text',
@@ -141,8 +141,9 @@
       },
       hasFieldsUnderFiveChars(): boolean {
         return this.elements
-          .filter(
-            (el: any): any => el.hasOwnProperty('required') && (el.name !== 'firstname' && el.name !== 'lastname')
+          .filter((el: any): any => el.hasOwnProperty('required')
+              && (el.name !== 'firstname'
+              && el.name !== 'lastname')
           )
           .map((el: any): string => el.value)
           .some((val: string): boolean => val.length < 5);
@@ -162,128 +163,205 @@
 
 <template>
   <Layout>
-    <div id='registration-page'>
-      <section id='center-module' class='mw-100'>
-        <section id='app-summary' class='px-4'>
-          <h3>what is lorem ipsum</h3>
-          <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-          <h3>why do we use it</h3>
-          <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
-          <h3>where can i get some</h3>
-          <p>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
+    <div
+      id='registration'
+      class='py-5'>
+      <section id='main-wrap'>
+        <section id='main-features'>
+          <div>
+            <h3 class='font-weight-bold'>what is lorem ipsum</h3>
+            <p class='mb-0'>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+          </div>
+          <div>
+            <h3 class='font-weight-bold'>why do we use it</h3>
+            <p class='mb-0'>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</p>
+          </div>
+          <div>
+            <h3 class='font-weight-bold'>where can i get some</h3>
+            <p class='mb-0'>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
+          </div>
         </section>
-        <form class='p-3 rounded'>
-          <label
-            :key='key'
-            class='mb-3 w-100'
-            v-for='(el, key) in elements'>
-            <span :class="{ active: (key === focusIndex || el.value.trim() !== '')}">
-              {{ el.heading }}
-              <span v-if="el.value.trim() !== '' && el.name !== 'verifypassword'">&nbsp;<i class='fas fa-check'></i></span>
-              <span v-if="el.value.trim() !== '' && el.name === 'verifypassword'">&nbsp;
-                <i v-if='password === verifypassword' class='fas fa-check'></i>
-                <i v-if='password !== verifypassword' class='fas fa-times red'></i>
+        <section id='form-and-redirect'>
+          <form class='p-3 rounded mb-4'>
+            <label
+              :key='key'
+              class='mb-3 w-100'
+              v-for='(el, key) in elements'>
+              <span :class="{ active: (key === focusIndex || el.value.trim() !== '')}">
+                {{ el.heading }}
+                <span v-if="el.value.trim() !== '' && el.name !== 'verifypassword'">&nbsp;<i class='fas fa-check'></i></span>
+                <span v-if="el.value.trim() !== '' && el.name === 'verifypassword'">&nbsp;
+                  <i v-if='password === verifypassword' class='fas fa-check'></i>
+                  <i v-if='password !== verifypassword' class='fas fa-times red'></i>
+                </span>
+                <span
+                  class='font-weight-bold'
+                  v-if="key !== focusIndex && el.value.trim() === '' && el.required === true">*</span>
               </span>
-              <span
-                class='font-weight-bold'
-                v-if="key !== focusIndex && el.value.trim() === '' && el.required === true">*</span>
-            </span>
-            <input
-              :type='el.type'
-              :name='el.name'
-              :value='el.value'
-              :autofocus='key === 0'
-              @blur='focusIndex = null'
-              @focus='focusIndex = key'
-              :spellcheck='false'
-              @keyup='updateFieldValue(el.name, $event)'
-              class='d-block pt-3 pb-2 pr-3 w-100'/>
-          </label>
-          <button
-            type='button'
-            class='btn text-light d-block p-3 w-100'
-            @click='registerHandler'>
-            Register
-          </button>
-        </form>
+              <input
+                :type='el.type'
+                :name='el.name'
+                :value='el.value'
+                :autofocus='key === 0'
+                @blur='focusIndex = null'
+                @focus='focusIndex = key'
+                :spellcheck='false'
+                @keyup='updateFieldValue(el.name, $event)'
+                class='d-block pt-3 pb-2 pr-3 w-100'/>
+            </label>
+            <button
+              type='button'
+              class='btn text-light d-block p-3 w-100'
+              @click='registerHandler'>
+              Register
+            </button>
+          </form>
+          <section
+            id='login-cta'
+            class='p-3 rounded text-center'>
+            <span>Already have an account?</span>&nbsp; <inertia-link href='/login' method='get'>Log in</inertia-link>
+          </section>
+        </section>
       </section>
     </div>
   </Layout>
 </template>
 
 <style lang='scss' scoped>
-  #registration-page {
+  #registration {
     width: 100vw;
     min-height: calc(100vh - 60px);
     background: rgb(234, 236, 238);
     position: relative;
 
-    #center-module {
+    #main-wrap {
       width: 900px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: 40px;
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      @include transform(translate(-50%, -50%));
+      margin: auto;
+      display: flex;
+      max-width: 90%;
+      justify-content: space-between;
 
-      form {
-        box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
+      #main-features {
+        display: flex;
+        padding-right: 40px;
+        flex-direction: column;
+        justify-content: space-between;
 
-        label {
-          position: relative;
+        p {
+          line-height: 35px;
+        }
+      }
 
-          input {
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            background: transparent !important;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+      #form-and-redirect {
 
-            &:-webkit-autofill,
-            &:-webkit-autofill:hover,
-            &:-webkit-autofill:focus,
-            &:-webkit-autofill:active {
-                transition: background-color 5000s ease-in-out 0s;
+        form {
+          width: 100%;
+          box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
+
+          label {
+            position: relative;
+
+            input {
+              border-top: none;
+              border-left: none;
+              border-right: none;
+              background: transparent !important;
+              border-bottom: 1px solid rgba(0,0,0,0.1);
+
+              &:-webkit-autofill,
+              &:-webkit-autofill:hover,
+              &:-webkit-autofill:focus,
+              &:-webkit-autofill:active {
+                  transition: background-color 5000s ease-in-out 0s;
+              }
+
+              &:active, &:focus {
+                outline: none;
+                border-bottom: 1px solid #00203FFF;
+              }
             }
 
-            &:active, &:focus {
-              outline: none;
-              border-bottom: 1px solid #00203FFF;
+            > span {
+              position: absolute;
+              top: 14px;
+              left: 2px;
+              @include transition(all 0.1s ease-out);
+
+              &.active {
+                font-size: 0.7rem;
+                color: rgba(0,0,0,0.5);
+                @include transform(translateY(-14px));
+              }
+
+              span:first-of-type i {
+                color: #28a745;
+              }
+
+              span {
+                color: #dc3545;
+              }
             }
           }
 
-          > span {
-            position: absolute;
-            top: 14px;
-            left: 2px;
-            @include transition(all 0.1s ease-out);
-
-            &.active {
-              font-size: 0.7rem;
-              color: rgba(0,0,0,0.5);
-              @include transform(translateY(-14px));
-            }
-
-            span:first-of-type i {
-              color: #28a745;
-            }
-
-            span {
-              color: #dc3545;
-            }
+          button {
+            background: #00203FFF;
           }
         }
 
-        button {
-          background: #00203FFF;
+        #login-cta {
+          width: 100%;
+          box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
         }
       }
     }
   }
 
   .red {
-    color: #dc3545!important; 
+    color: #dc3545!important;
+  }
+
+  @media screen and (max-width: 1000px) {
+    #registration {
+
+      #main-wrap {
+        flex-direction: column;
+
+        #main-features {
+          width: 400px;
+          max-width: 100%;
+          margin: 40px auto 0;
+          padding-right: 0;
+          text-align: center;
+          order: 2;
+        }
+
+        #form-and-redirect {
+          width: 400px;
+          max-width: 100%;
+          margin: auto;
+          order: 1;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    #registration {
+
+      #main-wrap {
+
+        #main-features {
+          width: 100%;
+
+          div:not(:last-of-type) {
+            margin-bottom: 30px;
+          }
+        }
+
+        #form-and-redirect {
+          width: 100%;
+        }
+      }
+    }
   }
 </style>

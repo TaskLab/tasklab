@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Inertia\{
+    Inertia,
+    Response as InertiaResponse
+};
 
 class LoginController extends Controller
 {
+    /**
+     * render the login page for existing users
+     *
+     * @return InertiaResponse
+     */
+    public function showLogin(): InertiaResponse
+    {
+        return Inertia::render('Login');
+    }
+
     /**
      * Authenticate
      *
