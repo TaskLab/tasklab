@@ -96,14 +96,14 @@ class RegisterController extends AppController
             'required' => 'The :attribute field is required.',
             'alpha'    => 'The :attribute value must only contain alphabetic characters.',
             'email'    => 'The :attribute provided is not valid.',
-            'unique'   => 'The :attribute value already exists.',
+            'unique'   => 'The :attribute value is already taken.',
             'min'      => 'The :attribute value must be a minimum of 8 characters.',
         ];
 
         $validator = Validator::make($payload,[
             'firstname'    => 'required|alpha',
             'lastname'     => 'required|alpha',
-            'email'        => 'required|email:rfc',
+            'email'        => 'required|unique:users,email|email:rfc',
             'organization' => 'unique:organization,org_name|alpha_num',
             'password'     => 'required|min:8'
         ], $errorMessages);
