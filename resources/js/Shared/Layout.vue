@@ -12,13 +12,8 @@
 
 <template>
   <main>
-    <header>
-
-    </header>
-    <section>
-      <Header/>
-      <slot/>
-    </section>
+    <Header/>
+    <slot/>
   </main>
 </template>
 

@@ -1,13 +1,21 @@
 <script lang='ts'>
-  export default {
-    name: 'Header'
-  }
+  import Vue from 'vue'
+
+  export default Vue.extend({
+    name: 'Header',
+    computed: {
+      onLoginOrRegister(): boolean {
+        return ['/login', '/register'].includes(window.location.pathname);
+      }
+    }
+  })
 </script>
 
 <template>
   <header id='app-header'>
     <h3 class='text-center font-weight-bold'>
-      <inertia-link href='/' class='text-light'>tasklab</inertia-link>
+      <span v-if="onLoginOrRegister">tasklab</span>
+      <inertia-link href='/' class='text-light' v-else>tasklab</inertia-link>
     </h3>
   </header>
 </template>
@@ -23,8 +31,9 @@
       margin: 0;
       line-height: 60px;
 
-      a {
+      a, span {
         text-decoration: none;
+        @include userSelect(none);
       }
     }
   }

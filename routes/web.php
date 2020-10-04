@@ -33,6 +33,7 @@ Route::get('/missing-org', function () {
 // Protect task related routes with:
 // middleware(['auth','auth.org'])
 
+Route::get('/login', [LoginController::class, 'showLogin']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::prefix('org')->middleware('auth')->group(function () {
     Route::post('create', [OrganizationController::class, 'create']);
