@@ -6,9 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 use Illuminate\Database\Eloquent\Relations\{
+    HasManyThrough,
+    HasOne,
     BelongsTo,
-    HasOne
+    BelongsToMany
 };
 
 
@@ -65,5 +68,20 @@ class User extends Authenticatable
     public function pointOfContactFor(): BelongsTo
     {
         return $this->belongsTo(OrganizationSetting::class, 'point_of_contact_id', 'id');
+    }
+
+    public function subscriberTo(): BelongsTo
+    {
+        return $this->belongsTo(TaskSubscriber::class, 'user_id', 'id');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'id', 'owner_id');
+    }
+
+    public function taskChanges(): BelongsToMany
+    {
+        return $this->belongsToMany(TaskChanges::class);
     }
 }
