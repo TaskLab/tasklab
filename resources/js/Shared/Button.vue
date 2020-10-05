@@ -12,9 +12,13 @@
         type: String
       },
       icon: {
-        type: Object,
+        type: [Object, String],
         validator(value: any): boolean {
-          return (value.hasOwnProperty('position') && value.hasOwnProperty('class'))
+          if (typeof value === 'object') {
+            return (value.hasOwnProperty('position') && value.hasOwnProperty('class'))
+          }
+
+          return value.includes('fa-') || value === '';
         }
       },
       path: {
@@ -27,6 +31,9 @@
         type: String
       },
       text: {
+        type: String
+      },
+      title: {
         type: String
       },
       type: {
@@ -87,6 +94,7 @@
     :type='type'
     :style='styles'
     :class='classes'
+    :title='title'
     class='btn-component rounded'
     @click='clickHandler'>
     <div
@@ -95,9 +103,13 @@
       <i class='fas fa-spinner'></i>
     </div>
     <div v-else>
-      <i v-if="icon !== undefined && icon.position === 'before'" :class='icon.class'></i>
-      {{ text }}
-      <i v-if="icon !== undefined && icon.position === 'after'" :class='icon.class'></i>
+      <i
+        :class='icon.class'
+        v-if="['', undefined].includes(icon) == false && icon.position === 'before'"></i>
+      {{ text }} <i v-if="typeof icon === 'string' && icon !== ''" :class='icon'></i>
+      <i
+        :class='icon.class'
+        v-if="['', undefined].includes(icon) == false && icon.position === 'after'"></i>
     </div>
   </button>
 </template>
