@@ -30,9 +30,8 @@ class LoginController extends Controller
     {
         if (Auth::check()) {
             return redirect()->route('home');
-        } else {
-            return Inertia::render('Login');
         }
+        return Inertia::render('Login');
     }
 
     /**
@@ -49,9 +48,8 @@ class LoginController extends Controller
                 return Inertia::render('Login', [
                     'success' => 'User credentials valid.'
                 ]);
-            } else {
-                throw new Exception('Invalid login credentials.');
             }
+            throw new Exception('Invalid login credentials.');
         } catch (Exception $e) {
             return Inertia::render('Login', [
                 'error' => $e->getMessage()
