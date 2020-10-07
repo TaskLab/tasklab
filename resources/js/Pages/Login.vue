@@ -13,6 +13,14 @@
     components: {
       Layout
     },
+    props: {
+      error: {
+        type: String
+      },
+      success: {
+        type: String
+      }
+    },
     data(): LoginData {
       return {
         email: '',
@@ -38,6 +46,11 @@
             value: this.password
           }
         ]
+      }
+    },
+    watch: {
+      success(): void {
+        window.location.href = '/';
       }
     },
     methods: {
