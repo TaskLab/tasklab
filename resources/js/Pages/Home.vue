@@ -6,12 +6,17 @@
     name: 'Home',
     components: {
       Layout
+    },
+    props: {
+      user: {
+        type: Object
+      }
     }
   })
 </script>
 
 <template>
-  <layout>
+  <Layout>
     
-  </layout>
+  </Layout>
 </template>

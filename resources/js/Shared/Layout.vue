@@ -6,6 +6,19 @@
     name: 'Layout',
     components: {
       Header
+    },
+    created(): void {
+      if (this.$store.state.authenticatedUser === null) {
+        const userJsonData: string|undefined|null = document.querySelector("meta[name='auth-user']")
+          ?.getAttribute('content');
+
+        if (typeof userJsonData === 'string' && userJsonData !== '') {
+          this.$store.commit(
+            'updateAuthenticatedUser',
+            JSON.parse(userJsonData)
+          );
+        }
+      }
     }
   }
 </script>

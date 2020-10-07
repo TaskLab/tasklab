@@ -1,5 +1,7 @@
 <script lang='ts'>
   import Button from '../Shared/Button.vue'
+  import HeaderAuth from '../Shared/HeaderAuth.vue'
+  import { mapState } from 'vuex'
   import Vue from 'vue'
 
   interface HeaderData {
@@ -11,7 +13,8 @@
   export default Vue.extend({
     name: 'Header',
     components: {
-      Button
+      Button,
+      HeaderAuth
     },
     // @jlrusso - (TODO) - move this resize code to main app.vue once data store is set
     mounted(): void {
@@ -46,6 +49,7 @@
       }
     },
     computed: {
+      ...mapState(['authenticatedUser']),
       onLoginOrRegister(): boolean {
         return ['/login', '/register'].includes(window.location.pathname);
       }
@@ -102,7 +106,7 @@
     <inertia-link href='/' class='logo text-light font-weight-bold' v-else>tasklab</inertia-link>
     <section
       id='unauth-btns'
-      v-if='onLoginOrRegister === false'>
+      v-if='onLoginOrRegister === false && authenticatedUser === null'>
       <Button
         :key='`hb-${key}`'
         :icon='btn.icon'
@@ -113,6 +117,7 @@
         :classes='btn.classes'
         v-for='(btn, key) in buttons'/>
     </section>
+    <HeaderAuth v-if='authenticatedUser !== null'/>
   </header>
 </template>
 

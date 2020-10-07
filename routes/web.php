@@ -22,7 +22,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    // welcome and sign-up page.
+    // welcome and sign-up page
     return Inertia::render('Home');
 })->name('home');
 
@@ -33,12 +33,18 @@ Route::get('/missing-org', function () {
 // Protect task related routes with:
 // middleware(['auth','auth.org'])
 
+/** AUTH **/
 Route::get('/login', [LoginController::class, 'showLogin']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout']);
+Route::get('/register', [RegisterController::class, 'showRegister']);
+Route::post('/register', [RegisterController::class, 'register']);
+
 Route::prefix('org')->middleware('auth')->group(function () {
     Route::post('create', [OrganizationController::class, 'create']);
     Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
 });
 
-Route::get('/register', [RegisterController::class, 'showRegister']);
-Route::post('/register', [RegisterController::class, 'register']);
+Route::fallback(function () {
+    return redirect()->route('home');
+});
