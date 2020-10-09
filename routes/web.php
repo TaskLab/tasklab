@@ -34,7 +34,7 @@ Route::get('/missing-org', function () {
 // middleware(['auth','auth.org'])
 
 /** AUTH **/
-Route::get('/login', [LoginController::class, 'showLogin']);
+Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);
 Route::get('/register', [RegisterController::class, 'showRegister']);
