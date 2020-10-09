@@ -24,7 +24,7 @@ use Inertia\{
     Response as InertiaResponse
 };
 
-class RegisterController extends AppController
+class RegisterController extends Controller
 {
     /**
      * render the registration page
