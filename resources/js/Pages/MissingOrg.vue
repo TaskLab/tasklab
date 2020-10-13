@@ -2,7 +2,9 @@
   import Layout from '../Shared/Layout.vue';
   import Vue from 'vue';
   import Input from '../Shared/Input.vue';
+  import { mapState } from 'vuex';
   import SwitchBtn from '../Shared/SwitchBtn.vue';
+  import Vue from 'vue';
 
   interface MissingOrgType {
     orgVal: string,
@@ -44,7 +46,7 @@
             replace: false,
             preserveState: true,
             preserveScroll: false,
-            _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+            _token: this.csrfToken
           });
         } catch (e) {
           alert(e.message);

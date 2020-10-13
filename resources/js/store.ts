@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 interface StateData {
   authenticatedUser: any|null,
+  csrfToken: string|null|undefined,
   onMobileDevice: boolean,
   onDarkMode: boolean
 }
@@ -12,6 +13,7 @@ interface StateData {
 export default new Vuex.Store({
   state: {
     authenticatedUser: null,
+    csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
     onMobileDevice: false,
     onDarkMode: false
   },

@@ -1,5 +1,6 @@
 <script lang='ts'>
   import Layout from '../Shared/Layout.vue'
+  import { mapState } from 'vuex'
   import Vue from 'vue'
 
   interface RegisterData {
@@ -37,6 +38,7 @@
       }
     },
     computed: {
+      ...mapState(['csrfToken']),
       elements(): any[] {
         return [
           {
@@ -127,7 +129,7 @@
             replace: false,
             preserveState: true,
             preserveScroll: false,
-            _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+            _token: this.csrfToken
           });
         } catch (e) {
           alert(e.message);
