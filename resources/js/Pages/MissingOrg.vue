@@ -1,7 +1,8 @@
 <script lang='ts'>
   import Layout from '../Shared/Layout.vue';
+  import Vue from 'vue';
+  import Input from '../Shared/Input.vue';
   import { mapState } from 'vuex';
-  import InputField from '../Shared/InputField.vue';
   import SwitchBtn from '../Shared/SwitchBtn.vue';
   import Vue from 'vue';
 
@@ -14,7 +15,7 @@
     name: 'Home',
     components: {
       Layout,
-      InputField,
+      Input,
       SwitchBtn
     },
     data(): MissingOrgType {
@@ -77,16 +78,15 @@
         :firstOp='{name: "New Org", value: false}'
         :secondOp='{name: "Org Key", value: true}'
         @switch="handleSwitch"/>
-      <InputField
-        class="my-4"
-        inputType='text'
-        v-model="orgVal"
-        @updateFieldValue='orgVals'
+      <Input
+        v-model='orgVal'
+        @update='orgVals'
         :heading='heading'
-        :emitOnChange='true'
-        :defaultVal="orgVal"
+        :defaultVal='orgVal'
+        headingStyle='background:white;'
         inputStyle='border:1px solid rgba(0,0,0,0.2);background:white;'
-        labelStyle='width:500px;margin:auto;'
+        wrapClasses='d-block my-3 mx-auto'
+        wrapStyle='width:500px;'
         :placeholder='placeholder'/>
       <button class='btn btn-primary' @click='submitPayload'>Submit</button>
     </section>
