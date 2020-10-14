@@ -1,6 +1,5 @@
 <script lang='ts'>
   import Layout from '../Shared/Layout.vue';
-  import Vue from 'vue';
   import Input from '../Shared/Input.vue';
   import { mapState } from 'vuex';
   import SwitchBtn from '../Shared/SwitchBtn.vue';
