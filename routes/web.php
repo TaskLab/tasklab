@@ -21,14 +21,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::middleware('org.missing')->get('/', function () {
     // welcome and sign-up page
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('/missing-org', function () {
+Route::middleware(['auth','org.present'])->get('/missing-org', function () {
     return Inertia::render('MissingOrg');
-})->middleware('auth')->name('missing-org');
+})->name('missing-org');
 
 // Protect task related routes with:
 // middleware(['auth','auth.org'])
