@@ -8,6 +8,12 @@
 
   export default Vue.extend({
     name: 'Select',
+    mounted(): void {
+      document.addEventListener('click', e => this.toggleOptionsOnBlur(e));
+    },
+    destroyed(): void {
+      document.removeEventListener('click', e => this.toggleOptionsOnBlur(e));
+    },
     props: {
       heading: {
         type: String
@@ -16,6 +22,12 @@
         type: String
       },
       headingStyle: {
+        type: String
+      },
+      listClasses: {
+        type: String
+      },
+      listStyle: {
         type: String
       },
       options: {
@@ -31,8 +43,17 @@
       placeholder: {
         type: String
       },
-      returnKey: {
+      reset: {
         type: Boolean
+      },
+      returnKey: {
+        type: String
+      },
+      targetProps: {
+        type: Array,
+        validator(value: string[]): boolean {
+          return value.every(v => typeof v === 'string');
+        }
       },
       wrapClasses: {
         type: String
@@ -47,10 +68,28 @@
         showOptionList: false
       }
     },
+    watch: {
+      reset(): void {
+        if (this.reset === true) {
+          this.resetHandler();
+        }
+      }
+    },
     methods: {
       resetHandler(): void {
         this.selectedOption = null;
         this.showOptionList = false;
+      },
+      toggleOptionsOnBlur(e: MouseEvent|Event|null|undefined): void {
+        if (this.showOptionList === false) {
+          return;
+        }
+
+        e = e || event;
+        const target: EventTarget = e?.target as EventTarget;
+        if (this.$refs[`select-${this._uid}`].contains(target) === false) {
+          this.showOptionList = false;
+        }
       },
       updateSelectedOption(option: {id: string|number, name: string}): void {
         this.selectedOption = option;
@@ -58,7 +97,7 @@
 
         this.$emit(
           'update',
-          (this.returnKey === true) ? option.id : option
+          (this.returnKey !== undefined) ? option[this.returnKey] : option
         );
       }
     }
@@ -70,6 +109,7 @@
     :style='wrapStyle'
     :class='wrapClasses'
     class='select-wrap pr-5'
+    :ref='`select-${_uid}`'
     @click.self.stop='showOptionList = !showOptionList'>
     <span
       class='heading'
@@ -84,13 +124,17 @@
       @click.self.stop='showOptionList = !showOptionList'>
       {{ placeholder }}
     </span>
-    <span class='selected-option' v-else>{{ selectedOption.name }}</span>
+    <span class='selected-option' v-else>
+      {{ selectedOption[targetProps[targetProps.length - 1]] }}
+    </span>
     <i
       v-if='selectedOption !== null'
       class='fa fa-times reset-btn font-weight-bold p-2'
       @click='resetHandler'></i>
     <ul
       v-if='showOptionList'
+      :class='listClasses'
+      :style='listStyle'
       class='option-list m-0 p-0 w-100'>
       <li
         :key='`o-${key}`'
@@ -99,7 +143,7 @@
         class='option p-3'
         v-for='(option, key) in options'
         @click='updateSelectedOption(option)'>
-        {{ option.id }} | {{ option.name }}
+        {{ targetProps.map(p => option[p]).reduce((s, p) => s + '&nbsp; - &nbsp;' + p) }}
       </li>
     </ul>
   </div>
@@ -111,7 +155,7 @@
     width: 200px;
     cursor: pointer;
     position: relative;
-    background: #d5d8dc;
+    background: transparent;
     border: $light-dark-slim;
     @include userSelect(none);
     @include borderRadius(5px);
@@ -125,6 +169,10 @@
       font-size: 0.7rem;
       color: #00203FFF;
       background: #d5d8dc;
+    }
+
+    .placeholder {
+      color: rgba(0,0,0,0.4);
     }
 
     .placeholder,
@@ -142,12 +190,14 @@
     }
 
     .option-list {
+      z-index: 1;
       background: #d5d8dc;
       position: absolute;
       top: 110%;
       left: 0;
+      max-height: 250px;
+      overflow-y: auto;
       border: $light-dark-slim;
-      overflow: hidden;
       @include borderRadius(5px);
 
       li {
@@ -156,6 +206,10 @@
         &:hover {
           background: #00203FFF;
           color: white;
+        }
+
+        &:not(:last-of-type) {
+          border-bottom: $light-dark-slim;
         }
       }
     }

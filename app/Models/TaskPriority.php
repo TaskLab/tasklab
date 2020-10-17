@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{
+    Model,
+    Collection
+};
 
 use Illuminate\Database\Eloquent\Relations\{
     HasManyThrough,
@@ -20,6 +23,16 @@ class TaskPriority extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'priority'
+        'name'
     ];
+
+    /**
+     * get task priority collection for options dropdown
+     *
+     * @return Collection
+     */
+    public static function getAllAsOptions(): Collection
+    {
+        return self::select('id', 'name')->get();
+    }
 }

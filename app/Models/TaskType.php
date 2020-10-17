@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{
+    Model,
+    Collection
+};
 
 use Illuminate\Database\Eloquent\Relations\{
     HasManyThrough,
@@ -12,14 +15,19 @@ use Illuminate\Database\Eloquent\Relations\{
     BelongsToMany
 };
 
-class TaskCreationType extends Model
+class TaskType extends Model
 {
     use HasFactory;
 
-    protected $table = 'task_creation_types';
+    protected $table = 'task_types';
     public $timestamps = false;
 
     protected $fillable = [
-        'creation_type'
+        'name'
     ];
+
+    public static function getAllAsOptions(): Collection
+    {
+        return self::select('id', 'name')->get();
+    }
 }
