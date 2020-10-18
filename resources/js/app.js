@@ -2,13 +2,15 @@ require('./bootstrap');
 require('bootstrap/dist/css/bootstrap.min.css');
 
 import Vue from 'vue';
-import { InertiaApp } from '@inertiajs/inertia-vue'
-import store from './store.ts'
+import Vuex from 'vuex';
+import { InertiaApp } from '@inertiajs/inertia-vue';
+import store from './store.ts';
 
-Vue.config.productionTip = false
-Vue.use(InertiaApp)
+Vue.config.productionTip = false;
+Vue.use(InertiaApp);
+Vue.use(Vuex);
 
-const app = document.getElementById('app')
+const app = document.getElementById('app');
 
 new Vue({
   store,
