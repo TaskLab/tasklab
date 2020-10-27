@@ -9,8 +9,6 @@ use App\Http\Controllers\{
     OrganizationController
 };
 
-use Illuminate\Support\Facades\Route;
-
 use Illuminate\Http\{
     JsonResponse,
     Request
