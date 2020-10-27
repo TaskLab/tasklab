@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrganizationTable extends Migration
+class CreateNavigationItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateOrganizationTable extends Migration
      */
     public function up()
     {
-        Schema::create('organization', function (Blueprint $table) {
+        Schema::create('navigation_items', function (Blueprint $table) {
             $table->id();
-            $table->string('org_name');
-            $table->boolean('active')->default(true);
-            $table->timestamps();
+            $table->string('name');
+            $table->string('path');
+            $table->string('icon');
+            $table->string('color');
         });
     }
 
@@ -28,6 +29,6 @@ class CreateOrganizationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization');
+        Schema::dropIfExists('navigation_items');
     }
 }

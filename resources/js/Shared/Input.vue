@@ -93,27 +93,18 @@
     },
     computed: {
       showResetBtn(): boolean {
-        if (this.disabled === true) {
-          return false;
+        if (
+          [null, undefined].includes(this.defaultVal) === false
+          || (typeof this.query === 'string' && this.query.trim() !== '')
+        ) {
+          return true;
         }
 
-        if (this.type === 'number') {
-          return (this.defaultVal === '' || this.defaultVal === undefined)
-            ? false
-            : true
-        }
-
-        return (
-          this.type === 'text'
-          && this.query.trim() === ''
-          && ['', null, undefined].includes(this.defaultVal)
-        )
-          ? false
-          : true
+        return false;
       }
     },
     watch: {
-      resetField(): void {
+      reset(): void {
         if (this.reset === true) {
           this.resetInputField();
         }
@@ -199,6 +190,10 @@
       &:focus {
         outline: none;
       }
+
+      &::placeholder {
+        color: rgba(0,0,0,0.4);
+      }
     }
 
     .input-heading {
@@ -218,7 +213,7 @@
       border: none;
       color: black;
       font-weight: bold;
-      background: #d5d8dc;
+      background: transparent;
       @include borderRadius(50%);
       @include transform(translateY(-50%));
 

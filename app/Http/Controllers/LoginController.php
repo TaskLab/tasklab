@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 
 use Illuminate\Http\{
     Request,
     RedirectResponse
 };
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{
     Auth,
     Validator
@@ -82,18 +84,19 @@ class LoginController extends Controller
             'password' => 'required|string'
         ], $errorMessages);
 
+        $message = '';
         if ($validator->fails()) {
             $msgs = Arr::flatten(
                 array_values($validator->errors()->getMessages())
             );
 
             foreach ($msgs as $key => $msg) {
-                $errorMessages .= ($key !== (count($msgs) - 1))
+                $message .= ($key !== (count($msgs) - 1))
                     ? $msg . "\n"
                     : $msg;
             }
 
-            throw new Exception($errorMessages);
+            throw new Exception($message);
         }
 
         return $credentials;

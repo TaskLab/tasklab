@@ -1,11 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
     LoginController,
     RegisterController,
+    TaskController,
     OrganizationController
+};
+
+use Illuminate\Http\{
+    JsonResponse,
+    Request
 };
 
 use Inertia\Inertia;
@@ -21,28 +27,41 @@ use Inertia\Inertia;
 |
 */
 
-Route::middleware('org.missing')->get('/', function () {
+Route::get('/', function () {
     // welcome and sign-up page
     return Inertia::render('Home');
 })->name('home');
 
-Route::middleware(['auth','org.present'])->get('/missing-org', function () {
-    return Inertia::render('MissingOrg');
-})->name('missing-org');
+/** GUEST-DEPENDENT ROUTES **/
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class, 'logout']);
+    Route::get('/register', [RegisterController::class, 'showRegister']);
+    Route::post('/register', [RegisterController::class, 'register']);
+});
 
-// Protect task related routes with:
-// middleware(['auth','auth.org'])
+/** AUTH-DEPENDENT ROUTES **/
+Route::middleware('auth')->group(function () {
+    Route::prefix('org')->group(function () {
+        Route::post('create', [OrganizationController::class, 'create']);
+        Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
+    });
 
-/** AUTH **/
-Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout']);
-Route::get('/register', [RegisterController::class, 'showRegister']);
-Route::post('/register', [RegisterController::class, 'register']);
+    Route::middleware('auth.org')->get('/missing-org', function () {
+        return Inertia::render('MissingOrg');
+    })->name('missing-org');
 
-Route::prefix('org')->middleware('auth')->group(function () {
-    Route::post('create', [OrganizationController::class, 'create']);
-    Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
+    Route::resource('tasks', TaskController::class);
+});
+
+
+Route::get('/navigation-items', function (): JsonResponse {
+    $items = \App\Models\NavigationItem::all();
+
+    return response()->json([
+        'items' => $items
+    ]);
 });
 
 Route::fallback(function () {

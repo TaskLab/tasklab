@@ -23,7 +23,7 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'org_name',
+        'name',
         'organization_setting_id',
         'active',
     ];
@@ -45,7 +45,7 @@ class Organization extends Model
             ]);
     
             $orgRecord = [
-                'org_name'                => $orgName,
+                'name'                    => $orgName,
                 'organization_setting_id' => $orgSetting->id,
                 'active'                  => true
             ];

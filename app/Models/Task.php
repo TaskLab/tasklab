@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{
+    Model,
+    Collection
+};
 
 use Illuminate\Database\Eloquent\Relations\{
     HasManyThrough,
@@ -23,11 +27,29 @@ class Task extends Model
         'owner_id',
         'status_id',
         'priority_id',
-        'source_id',
+        'type_id',
+        'status_id',
+        'state_id',
         'author_id',
         'description',
-        'title'
+        'organization_id',
+        'parent_id',
+        'target_date',
+        'title',
+        'link'
     ];
+
+    /**
+     * get all tasks for option dropdown
+     *
+     * @return Collection
+     */
+    public static function getAllAsOptions(): Collection
+    {
+        return self::select('id', 'title')
+            ->where('organization_id', Auth::user()->organization_id)
+            ->get();
+    }
 
     public function owner(): HasOne
     {
@@ -44,9 +66,9 @@ class Task extends Model
         return $this->hasOne(TaskPriority::class, 'id', 'priority_id');
     }
 
-    public function source(): HasOne
+    public function taskType(): HasOne
     {
-        return $this->hasOne(TaskCreationType::class, 'id', 'source_id');
+        return $this->hasOne(TaskType::class, 'id', 'type_id');
     }
 
     public function comments(): HasMany
