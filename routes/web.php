@@ -9,6 +9,13 @@ use App\Http\Controllers\{
     OrganizationController
 };
 
+use Illuminate\Support\Facades\Route;
+
+use Illuminate\Http\{
+    JsonResponse,
+    Request
+};
+
 use Inertia\Inertia;
 
 /*
@@ -48,6 +55,15 @@ Route::middleware('auth')->group(function () {
     })->name('missing-org');
 
     Route::resource('tasks', TaskController::class);
+});
+
+
+Route::get('/navigation-items', function (): JsonResponse {
+    $items = \App\Models\NavigationItem::all();
+
+    return response()->json([
+        'items' => $items
+    ]);
 });
 
 Route::fallback(function () {

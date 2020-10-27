@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import Burger from '../Shared/Burger.vue'
   import Button from '../Shared/Button.vue'
   import HeaderAuth from '../Shared/HeaderAuth.vue'
   import { mapState } from 'vuex'
@@ -13,6 +14,7 @@
   export default Vue.extend({
     name: 'Header',
     components: {
+      Burger,
       Button,
       HeaderAuth
     },
@@ -102,6 +104,7 @@
 
 <template>
   <header id='app-header'>
+    <Burger v-if='$store.state.authenticatedUser !== null'/>
     <span class='logo font-weight-bold text-light' v-if="onLoginOrRegister">tasklab</span>
     <inertia-link href='/' class='logo text-light font-weight-bold' v-else>tasklab</inertia-link>
     <section

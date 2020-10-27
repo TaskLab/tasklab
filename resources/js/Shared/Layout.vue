@@ -1,11 +1,13 @@
 <script lang='ts'>
   import Header from './Header.vue'
+  import SideNav from './SideNav.vue'
   import Vue from 'vue'
 
   export default {
     name: 'Layout',
     components: {
-      Header
+      Header,
+      SideNav
     },
     created(): void {
       if (this.$store.state.authenticatedUser === null) {
@@ -26,6 +28,7 @@
 <template>
   <main>
     <Header/>
+    <SideNav v-if='$store.state.authenticatedUser !== null'/>
     <slot/>
   </main>
 </template>

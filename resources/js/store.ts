@@ -7,7 +7,8 @@ interface StateData {
   authenticatedUser: any|null,
   csrfToken: string|null|undefined,
   onMobileDevice: boolean,
-  onDarkMode: boolean
+  onDarkMode: boolean,
+  showSideNav: boolean
 }
 
 export default new Vuex.Store({
@@ -15,7 +16,8 @@ export default new Vuex.Store({
     authenticatedUser: null,
     csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
     onMobileDevice: false,
-    onDarkMode: false
+    onDarkMode: false,
+    showSideNav: false
   },
   strict: process.env.NODE_ENV !== 'production',
   mutations: {
@@ -27,6 +29,9 @@ export default new Vuex.Store({
     },
     updateAuthenticatedUser(state: StateData, value: any|null): void {
       state.authenticatedUser = value;
+    },
+    toggleSideNavigation(state: StateData, value: boolean): void {
+      state.showSideNav = value;
     }
   }
 })
