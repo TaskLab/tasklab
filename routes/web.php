@@ -1,11 +1,16 @@
-<?php
-
-use Illuminate\Support\Facades\Route;
+<?php declare(strict_types=1);
 
 use App\Http\Controllers\{
     LoginController,
     RegisterController,
     OrganizationController
+};
+
+use Illuminate\Support\Facades\Route;
+
+use Illuminate\Http\{
+    JsonResponse,
+    Request
 };
 
 use Inertia\Inertia;
@@ -43,6 +48,15 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::prefix('org')->middleware('auth')->group(function () {
     Route::post('create', [OrganizationController::class, 'create']);
     Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
+});
+
+
+Route::get('/navigation-items', function (): JsonResponse {
+    $items = \App\Models\NavigationItem::all();
+
+    return response()->json([
+        'items' => $items
+    ]);
 });
 
 Route::fallback(function () {
