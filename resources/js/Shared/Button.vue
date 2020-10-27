@@ -11,6 +11,9 @@
       classes: {
         type: String
       },
+      disabled: {
+        type: Boolean
+      },
       icon: {
         type: [Object, String],
         validator(value: any): boolean {
@@ -81,9 +84,10 @@
 
         if (this.path !== undefined) {
           this.$inertia.visit(this.path, { method: 'get' });
-        } else {
-          this.$emit('click');
+          return;
         }
+
+        this.$emit('click');
       }
     }
   })
@@ -95,6 +99,7 @@
     :style='styles'
     :class='classes'
     :title='title'
+    :disable='disabled'
     class='btn-component rounded'
     @click='clickHandler'>
     <div
