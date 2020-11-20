@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import axios from 'axios'
   import Vue from 'vue'
 
   interface UserMenuData {
@@ -23,11 +24,6 @@
       return {
         items: [
           {
-            icon: 'fas fa-cog',
-            name: 'Settings',
-            path: '/'
-          },
-          {
             icon: 'fas fa-sign-out-alt',
             name: 'Log out',
             path: '/logout'
@@ -36,15 +32,10 @@
       }
     },
     methods: {
-      clickHandler(path: string): void {
-        if (path === '/logout') {
-          this.$store.commit('updateAuthenticatedUser', null);
-          this.$inertia.post('/logout');
-          return;
-        }
-
-        this.$inertia.get('/');
-        window.location.href = '/'
+      async clickHandler(path: string): Promise<void> {
+        const res = await axios.post('/logout');
+        this.$store.commit('updateAuthenticatedUser', null);
+        window.location.href = '/';
       }
     }
   })

@@ -36,13 +36,13 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/logout', [LoginController::class, 'logout']);
     Route::get('/register', [RegisterController::class, 'showRegister']);
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
 /** AUTH-DEPENDENT ROUTES **/
 Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout']);
     Route::prefix('org')->group(function () {
         Route::post('create', [OrganizationController::class, 'create']);
         Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
