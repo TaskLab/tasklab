@@ -28,6 +28,56 @@ use Inertia\{
 class TaskController extends Controller
 {
     /**
+     * render page with list of existing tasks
+     *
+     * @return InertiaResponse
+     */
+    public function index(): InertiaResponse
+    {
+        $orgID = Auth::user()->organization_id;
+
+        $select = [
+            'id',
+            'title',
+            'owner_id',
+            'author_id',
+            'status_id',
+            'priority_id',
+            'type_id',
+            DB::raw('updated_at AS last_updated')
+        ];
+
+        $fields = [
+            'id'            => 'ID',
+            'title'         => 'Title',
+            'owner.name'    => 'Owner',
+            'author.name'   => 'Author',
+            'status.name'   => 'Status',
+            'priority.name' => 'Priority',
+            'type.name'     => 'Type',
+            'last_updated'  => 'Last Updated'
+        ];
+
+        $with = [
+            'owner',
+            'author',
+            'status',
+            'priority',
+            'type'
+        ];
+
+        $tasks = Task::select($select)
+            ->where('organization_id', $orgID)
+            ->with($with)
+            ->get();
+
+        return Inertia::render('Tasks/List', [
+            'fields' => $fields,
+            'tasks'  => $tasks
+        ]);
+    }
+
+    /**
      * render task creation page
      *
      * @return InertiaResponse

@@ -35,4 +35,9 @@ class TaskPriority extends Model
     {
         return self::select('id', 'name')->get();
     }
+
+    public function task(): HasMany
+    {
+        return $this->hasMany(Task::class, 'priority_id', 'id');
+    }
 }
