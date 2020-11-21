@@ -51,24 +51,29 @@ class Task extends Model
             ->get();
     }
 
-    public function owner(): HasOne
+    public function author(): BelongsTo
     {
-        return $this->hasOne(User::class, 'id', 'owner_id');
+        return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
-    public function status(): HasOne
+    public function owner(): BelongsTo
     {
-        return $this->hasOne(TaskStatus::class, 'id', 'status_id');
+        return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
-    public function priority(): HasOne
+    public function status(): BelongsTo
     {
-        return $this->hasOne(TaskPriority::class, 'id', 'priority_id');
+        return $this->belongsTo(TaskStatus::class, 'status_id', 'id');
     }
 
-    public function taskType(): HasOne
+    public function priority(): BelongsTo
     {
-        return $this->hasOne(TaskType::class, 'id', 'type_id');
+        return $this->belongsTo(TaskPriority::class, 'priority_id', 'id');
+    }
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(TaskType::class, 'type_id', 'id');
     }
 
     public function comments(): HasMany

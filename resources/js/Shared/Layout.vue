@@ -40,6 +40,6 @@
   }
 
   body {
-    background: rgb(213, 216, 220);
+    background: #F4F8F9;
   }
 </style>
