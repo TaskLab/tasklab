@@ -30,7 +30,7 @@
       reset: {
         type: Boolean
       },
-      styles: {
+      styling: {
         type: String
       },
       text: {
@@ -96,7 +96,7 @@
 <template>
   <button
     :type='type'
-    :style='styles'
+    :style='styling'
     :class='classes'
     :title='title'
     :disable='disabled'
@@ -122,5 +122,9 @@
 <style lang='scss' scoped>
   .btn-component {
     border: none;
+
+    &:focus, &:active {
+      outline: none;
+    }
   }
 </style>

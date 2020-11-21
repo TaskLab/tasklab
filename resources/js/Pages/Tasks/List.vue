@@ -22,6 +22,17 @@
         type: [Array, Object],
         required: true
       },
+      links: {
+        type: Array,
+        validator(links): boolean {
+          return links.every((link: any): boolean => {
+            return link.hasOwnProperty('key')
+              && link.hasOwnProperty('path')
+              && typeof link.key === 'string'
+              && typeof link.path === 'string'
+          })
+        }
+      },
       tasks: {
         type: [Array, Object],
         required: true
@@ -31,8 +42,8 @@
       return {
         gridConfig: {
           minWidth: '1700px',
-          columns:'100px auto 230px 220px 150px 150px 150px 220px',
-          gap:'35px'
+          columns:'60px 100px auto 230px 220px 150px 150px 150px 220px',
+          gap:'10px'
         }
       }
     }
@@ -43,7 +54,9 @@
   <Layout>
     <Results
       :items='tasks'
+      :links='links'
       :fields='fields'
+      :checkable='true'
       :gridConfig='gridConfig'/>
   </Layout>
 </template>

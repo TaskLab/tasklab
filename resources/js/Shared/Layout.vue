@@ -26,20 +26,37 @@
 </script>
 
 <template>
-  <main>
+  <main id='app'>
     <Header/>
     <SideNav v-if='$store.state.authenticatedUser !== null'/>
-    <slot/>
+    <div
+      id='wrapper'
+      class='mx-auto'>
+      <slot/>
+    </div>
   </main>
 </template>
 
-<style>
+<style lang='scss'>
   * {
     font-family: 'Nunito';
     box-sizing: border-box;
   }
 
-  body {
+  ul {
+    list-style-type: none;
+  }
+
+  #app {
+    overflow: hidden;
+  }
+
+  #wrapper {
+    width: 100%;
+    padding: 35px;
+    max-width: 1600px;
     background: #F4F8F9;
+    min-height: calc(100vh - 60px);
+    @include transition(all 0.2s ease-out);
   }
 </style>
