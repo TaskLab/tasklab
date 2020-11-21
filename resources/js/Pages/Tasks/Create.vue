@@ -385,8 +385,6 @@
 
 <style lang='scss' scoped>
   #create-task {
-    width: 100vw;
-    min-height: calc(100vh - 60px);
 
     #task-form {
       width: 100%;

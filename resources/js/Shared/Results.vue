@@ -86,8 +86,8 @@
   <main id='results'>
     <h4 class='mb-5'>Tasks</h4>
     <section
-      class='mb-4 p-3'
-      id='result-tools'>
+      id='result-tools'
+      class='mb-4 p-3 rounded'>
       <Input
         heading='Search'
         wrapClasses='mr-2 mb-0'

@@ -47,14 +47,6 @@
     background: #F4F8F9;
   }
 
-  ul {
-    list-style-type: none;
-  }
-
-  #app {
-    overflow: hidden;
-  }
-
   #wrapper {
     width: 100%;
     padding: 35px;
@@ -62,5 +54,13 @@
     background: #F4F8F9;
     min-height: calc(100vh - 60px);
     @include transition(all 0.2s ease-out);
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  #app {
+    overflow: hidden;
   }
 </style>
