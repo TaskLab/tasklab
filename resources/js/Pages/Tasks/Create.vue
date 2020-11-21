@@ -376,7 +376,7 @@
           :reset='resetForm'
           theme='processing'
           classes='rounded text-white font-weight-bold py-3'
-          styles='background:#00203FFF;width:250px;max-width:95%'
+          styling='background:#00203FFF;width:250px;max-width:95%'
           @click='submitNewTaskHandler'/>
       </form>
     </div>
