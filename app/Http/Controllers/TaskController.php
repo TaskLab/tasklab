@@ -58,6 +58,10 @@ class TaskController extends Controller
             'last_updated'  => 'Last Updated'
         ];
 
+        $links = [
+            ['key' => 'id', 'path' => '/tasks/']
+        ];
+
         $with = [
             'owner',
             'author',
@@ -73,6 +77,7 @@ class TaskController extends Controller
 
         return Inertia::render('Tasks/List', [
             'fields' => $fields,
+            'links'  => $links,
             'tasks'  => $tasks
         ]);
     }
@@ -88,6 +93,16 @@ class TaskController extends Controller
             'Tasks/Create',
             $this->getRequiredNewTaskProperties()
         );
+    }
+
+    /**
+     * render the task viewing page
+     *
+     * @return InertiaResponse
+     */
+    public function show(): InertiaResponse
+    {
+        return Inertia::render('Tasks/Task');
     }
 
     /**

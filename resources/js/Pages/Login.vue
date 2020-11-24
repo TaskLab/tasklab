@@ -3,7 +3,7 @@
   import { mapState } from 'vuex'
   import Vue from 'vue'
 
-  interface LoginData {
+  type LoginData = {
     email: string,
     focusIndex: number|null,
     password: string
@@ -107,9 +107,8 @@
 <template>
   <Layout>
     <div
-      id='login'
-      class='py-5'>
-      <form class='p-3 rounded mb-4'>
+      id='login'>
+      <form class='p-3 rounded mb-4 mx-auto'>
         <h4 class='text-center mb-5 font-weight-bold'>Login</h4>
         <label
           :key='key'
@@ -155,16 +154,14 @@
 
 <style lang='scss' scoped>
   #login {
-    width: 100vw;
     min-height: calc(100vh - 60px);
-    background: rgb(234, 236, 238);
     position: relative;
 
     form {
       width: 400px;
-      margin: auto;
       max-width: 90%;
-      box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
+      background: #fff;
+      @include boxShadow(0 0 10px rgba(0,0,0,0.1));
 
       label {
         position: relative;
@@ -220,7 +217,8 @@
       width: 400px;
       margin: auto;
       max-width: 90%;
-      box-shadow: -10px -10px 25px 0 rgba(255,255,255,0.65), 10px 10px 25px 0 rgba(80, 80, 80, 0.2);
+      background: #fff;
+      @include boxShadow(0 0 10px rgba(0,0,0,0.1));
     }
   }
 
