@@ -1,7 +1,12 @@
 <script lang='ts'>
   import Vue from 'vue'
 
-  interface SelectData {
+  type Option = {
+    id: string|number,
+    name: string|number
+  }
+
+  type SelectData = {
     selectedOption: {id: string|number, name: string}|null,
     showOptionList: boolean
   }
@@ -15,6 +20,12 @@
       document.removeEventListener('click', e => this.toggleOptionsOnBlur(e));
     },
     props: {
+      defaultOption: {
+        type: [Object, String, Number]
+      },
+      disableReset: {
+        type: Boolean
+      },
       heading: {
         type: String
       },
@@ -37,7 +48,7 @@
       optionClasses: {
         type: String
       },
-      optionStyle: {
+      listOptionStyle: {
         type: String
       },
       placeholder: {
@@ -47,6 +58,12 @@
         type: Boolean
       },
       returnKey: {
+        type: String
+      },
+      selectedOptionClasses: {
+        type: String
+      },
+      selectedOptionStyle: {
         type: String
       },
       targetProps: {
@@ -64,7 +81,7 @@
     },
     data(): SelectData {
       return {
-        selectedOption: null,
+        selectedOption: this.defaultOption || null,
         showOptionList: false
       }
     },
@@ -91,7 +108,7 @@
           this.showOptionList = false;
         }
       },
-      updateSelectedOption(option: {id: string|number, name: string}): void {
+      updateSelectedOption(option: Option): void {
         this.selectedOption = option;
         this.showOptionList = false;
 
@@ -124,11 +141,17 @@
       @click.self.stop='showOptionList = !showOptionList'>
       {{ placeholder }}
     </span>
-    <span class='selected-option' v-else>
-      {{ selectedOption[targetProps[targetProps.length - 1]] }}
+    <span
+      class='selected-option'
+      :style='selectedOptionStyle'
+      :class='selectedOptionClasses'>
+      {{ (selectedOption !== null && targetProps !== undefined)
+        ? selectedOption[targetProps[targetProps.length - 1]]
+        : selectedOption
+      }}
     </span>
     <i
-      v-if='selectedOption !== null'
+      v-if='selectedOption !== null && disableReset === false'
       class='fa fa-times reset-btn font-weight-bold p-2'
       @click='resetHandler'></i>
     <ul
@@ -138,12 +161,16 @@
       class='option-list m-0 p-0 w-100'>
       <li
         :key='`o-${key}`'
-        :style='optionStyle'
-        :class='optionClasses'
         class='option p-3'
+        :class='optionClasses'
+        :style='listOptionStyle'
         v-for='(option, key) in options'
         @click='updateSelectedOption(option)'>
-        {{ targetProps.map(p => option[p]).reduce((s, p) => s + '&nbsp; - &nbsp;' + p) }}
+        {{ (targetProps !== undefined)
+          ? targetProps.map(p => option[p])
+            .reduce((s, p) => s + '&nbsp; - &nbsp;' + p)
+          : option
+        }}
       </li>
     </ul>
   </div>

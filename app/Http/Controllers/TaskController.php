@@ -70,15 +70,30 @@ class TaskController extends Controller
             'type'
         ];
 
-        $tasks = Task::select($select)
+        $builder = Task::select($select)
             ->where('organization_id', $orgID)
-            ->with($with)
-            ->get();
+            ->with($with);
+
+        if (
+            isset(request()->all()['query'])
+            && (($query = request()->input('query')) !== '')
+        ) {
+            $builder->where('id', $query)
+                ->orWhere('title', $query)
+                ->orWhere('description', $query)
+                ->orWhere('title', 'LIKE', "%{$query}%")
+                ->orWhere('description', 'LIKE', "%{$query}%");
+        }
+
+        $tasks = ($builder->count() > 0)
+            ? $builder->paginate((int) request()->input('resultsPerPage'))
+            : [];
 
         return Inertia::render('Tasks/List', [
-            'fields' => $fields,
-            'links'  => $links,
-            'tasks'  => $tasks
+            'fields'            => $fields,
+            'links'             => $links,
+            'resultsRequestURL' => '/tasks',
+            'tasks'             => $tasks
         ]);
     }
 
