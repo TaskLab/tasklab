@@ -13,12 +13,6 @@
 
   export default Vue.extend({
     name: 'Select',
-    mounted(): void {
-      document.addEventListener('click', e => this.toggleOptionsOnBlur(e));
-    },
-    destroyed(): void {
-      document.removeEventListener('click', e => this.toggleOptionsOnBlur(e));
-    },
     props: {
       defaultOption: {
         type: [Object, String, Number]
@@ -79,6 +73,16 @@
         type: String
       }
     },
+    mounted(): void {
+      if (this.defaultValue !== undefined) {
+        this.updateSelectedOption(this.defaultValue);
+      }
+
+      document.addEventListener('click', e => this.toggleOptionsOnBlur(e));
+    },
+    destroyed(): void {
+      document.removeEventListener('click', e => this.toggleOptionsOnBlur(e));
+    },
     data(): SelectData {
       return {
         selectedOption: this.defaultOption || null,
@@ -108,8 +112,12 @@
           this.showOptionList = false;
         }
       },
-      updateSelectedOption(option: Option): void {
-        this.selectedOption = option;
+      updateSelectedOption(option: {id: string|number} | string): void {
+        this.selectedOption = this.options.find(o => {
+          return (typeof option === 'object')
+            ? o.id === option.id
+            : o.id === option;
+        });
         this.showOptionList = false;
 
         this.$emit(

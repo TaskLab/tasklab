@@ -8,6 +8,8 @@ use App\Models\{
     Task,
     TaskType,
     TaskTag,
+    TaskState,
+    TaskStatus,
     TaskPriority,
     TaskSubscriber,
     User
@@ -115,9 +117,29 @@ class TaskController extends Controller
      *
      * @return InertiaResponse
      */
-    public function show(): InertiaResponse
+    public function show(string $taskID): InertiaResponse
     {
-        return Inertia::render('Tasks/Task');
+        $with = [
+            'owner',
+            'author',
+            'status',
+            'priority',
+            'organization',
+            'relatedTask',
+            'type',
+            'state'
+        ];
+        $task = Task::where('id', $taskID)->with($with)->first();
+        $taskStates = TaskState::all();
+        $taskStatus = TaskStatus::all();
+        $orgUsers = User::where('organization_id', Auth::user()->organization_id)->get();
+
+        return Inertia::render('Tasks/Task', [
+            'task' => $task,
+            'users' => $orgUsers,
+            'states' => $taskStates,
+            'statuses' => $taskStatus
+        ]);
     }
 
     /**

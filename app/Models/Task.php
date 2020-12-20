@@ -56,6 +56,11 @@ class Task extends Model
         return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'id');
@@ -64,6 +69,11 @@ class Task extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(TaskStatus::class, 'status_id', 'id');
+    }
+
+    public function state(): BelongsTo
+    {
+        return $this->belongsTo(TaskState::class);
     }
 
     public function priority(): BelongsTo
