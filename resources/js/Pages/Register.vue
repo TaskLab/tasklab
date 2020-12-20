@@ -231,9 +231,6 @@
 
 <style lang='scss' scoped>
   #registration {
-    width: 100vw;
-    min-height: calc(100vh - 60px);
-    background: rgb(234, 236, 238);
     position: relative;
 
     #main-wrap {
