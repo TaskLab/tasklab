@@ -104,6 +104,9 @@
       }
     },
     watch: {
+      defaultVal(): void {
+        this.query = this.defaultVal || '';
+      },
       reset(): void {
         if (this.reset === true) {
           this.resetInputField();

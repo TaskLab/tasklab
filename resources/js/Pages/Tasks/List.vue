@@ -33,6 +33,10 @@
           })
         }
       },
+      resultsRequestURL: {
+        required: true,
+        type: String
+      },
       tasks: {
         type: [Array, Object],
         required: true
@@ -57,6 +61,7 @@
       :links='links'
       :fields='fields'
       :checkable='true'
-      :gridConfig='gridConfig'/>
+      :gridConfig='gridConfig'
+      :resultsRequestURL='resultsRequestURL'/>
   </Layout>
 </template>

@@ -6,6 +6,19 @@
   import SwitchBtn from '../Shared/SwitchBtn.vue'
   import Vue from 'vue'
 
+  type ResultsData = {
+    page: number
+    resultsPerPage: number,
+    searchTimeout: ReturnType<typeof setTimeout> | null,
+    query: string | null
+  }
+
+  type ResultsRequestParams = {
+    page: number,
+    query?: string,
+    resultsPerPage: number
+  }
+
   export default Vue.extend({
     name: 'Results',
     components: {
@@ -46,11 +59,28 @@
               && typeof f.path === 'string';
           });
         }
+      },
+      resultsRequestURL: {
+        type: String,
+        required: true
+      }
+    },
+    mounted(): void {
+      let url: any = new URL(window.location.href);
+      let params = new URLSearchParams(url.search);
+      this.query = params.get('query') || null;
+    },
+    data(): ResultsData {
+      return {
+        page: 1,
+        resultsPerPage: 25,
+        searchTimeout: null,
+        query: null
       }
     },
     computed: {
       results(): any[] {
-        return this.items;
+        return this.items.data;
       }
     },
     methods: {
@@ -70,6 +100,18 @@
             : ''
           : item[key];
       },
+      getResults(): void {
+        const options = { preserveState: true };
+        const params: ResultsRequestParams = this.getResultsRequestParams();
+        this.$inertia.get(this.resultsRequestURL, params, options);
+      },
+      getResultsRequestParams(): ResultsRequestParams {
+        return {
+          page: this.page,
+          resultsPerPage: this.resultsPerPage,
+          query: this.query,
+        }
+      },
       getResultRowStyling(): object {
         return {
           display: 'grid',
@@ -77,6 +119,34 @@
           'grid-template-columns': `${this.gridConfig.columns}`,
           'grid-column-gap': `${this.gridConfig.gap}`
         };
+      },
+      resetResultsHandler(): void {
+        this.query = null;
+        this.page = 1;
+        this.getResults();
+      },
+      resultsQueryUpdateHandler(value: string): void {
+        if (value.trim() === '') {
+          this.query = null;
+          this.getResults();
+          return;
+        }
+
+        this.query = value;
+        if (this.searchTimeout === null) {
+          this.searchTimeout = setTimeout(() => {
+            this.getResults();
+          }, 1000);
+          return;
+        }
+
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+          this.getResults();
+        }, 1000);
+      },
+      updateResultsPerPage(value): void {
+        debugger;
       }
     }
   })
@@ -84,19 +154,43 @@
 
 <template>
   <main id='results'>
-    <h4 class='mb-5'>Tasks</h4>
+    <section id='results-header'>
+      <h4 class='mb-5 d-inline-block mr-3'>Tasks</h4>
+      <small
+        v-if='items !== undefined'
+        class='text-secondary d-inline-block font-weight-bold mr-3'>
+        {{ items.total }} Total
+      </small>
+      <small
+        class='text-secondary d-inline-block font-weight-bold float-right'>
+        <inertia-link href='/tasks/create'>Create a Task</inertia-link>
+      </small>
+    </section>
     <section
       id='result-tools'
       class='mb-4 p-3 rounded'>
       <Input
         heading='Search'
+        :defaultVal='query'
         wrapClasses='mr-2 mb-0'
         headingStyle='background:#fff;'
-        placeholder='Search Results'/>
+        placeholder='Search Results'
+        @update='resultsQueryUpdateHandler'/>
       <Button
-        text='Filter'
+        text='Reset'
         styling='height:54px;background:#00203FFF;'
-        classes='d-inline-block text-light px-5'/>
+        classes='d-inline-block text-light px-5 mr-2'
+        @click='resetResultsHandler'/>
+      <Select
+        heading='Per Page'
+        :defaultOption='25'
+        :disableReset='true'
+        :options='[25,50,75]'
+        headingStyle='background:#fff;'
+        selectedOptionStyle='left:32px'
+        wrapClasses='d-inline-block text-center'
+        wrapStyle='width:90px;vertical-align:bottom;padding:0!important;'
+        @update='updateResultsPerPage'/>
     </section>
     <section id='results-list'>
       <ul class='m-0 p-0'>
