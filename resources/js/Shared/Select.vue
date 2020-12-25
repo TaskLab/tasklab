@@ -74,8 +74,8 @@
       }
     },
     mounted(): void {
-      if (this.defaultValue !== undefined) {
-        this.updateSelectedOption(this.defaultValue);
+      if (this.defaultOption !== undefined) {
+        this.updateSelectedOption(this.defaultOption);
       }
 
       document.addEventListener('click', e => this.toggleOptionsOnBlur(e));

@@ -125,7 +125,7 @@ class TaskController extends Controller
             'status',
             'priority',
             'organization',
-            'relatedTask',
+            'parentTask',
             'type',
             'state'
         ];
