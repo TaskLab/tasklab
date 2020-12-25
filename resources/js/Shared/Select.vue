@@ -115,8 +115,8 @@
       updateSelectedOption(option: {id: string|number} | string): void {
         this.selectedOption = this.options.find(o => {
           return (typeof option === 'object')
-            ? o.id === option.id
-            : o.id === option;
+            ? (typeof o === 'object') ? o.id === option.id : o === option.id
+            : (typeof o === 'object') ? o.id === option : o === option;
         });
         this.showOptionList = false;
 
