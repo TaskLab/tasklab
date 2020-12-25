@@ -101,7 +101,7 @@ class Task extends Model
         return $this->hasManyThrough(Task::class, TaskRelation::class, 'child_id', 'id', 'id', 'task_id');
     }
 
-    public function parentTasks(): HasManyThrough
+    public function parentTask(): HasManyThrough
     {
         return $this->hasManyThrough(Task::class, TaskRelation::class, 'parent_id', 'id', 'id', 'task_id');
     }
