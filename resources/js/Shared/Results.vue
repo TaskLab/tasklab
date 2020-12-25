@@ -146,7 +146,7 @@
         }, 1000);
       },
       updateResultsPerPage(value): void {
-        debugger;
+        this.resultsPerPage = value;
       }
     }
   })
