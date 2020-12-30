@@ -40,9 +40,9 @@
 <template>
   <Layout>
     <div id='task'>
-      <h4 class='mb-5'>Task</h4>
+      <h4 class='mb-5'>Task #{{ task.id }}</h4>
       <section class='grid-col-3 mb-3'>
-        <p><b>Task ID:</b> {{ task.id }}</p>
+        <p><b>Title:</b> {{ task.title }}</p>
         <p><b>Author:</b> {{ task.author.name }}</p>
         <p><b>Created:</b> {{ new Date(task.created_at).toLocaleDateString() }}</p>
       </section>
@@ -72,7 +72,6 @@
           :targetProps="['id','name']"
           heading='State'/>
       </section>
-      <p><b>Subject:</b> {{ task.title }}</p>
       <p><b>Description:</b></p>
       <div class='description p-3 rounded' ref='description'></div>
     </div>
