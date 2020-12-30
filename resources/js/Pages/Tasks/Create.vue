@@ -117,7 +117,6 @@
             key: 'date',
             name: 'Target Date',
             placeholder: 'e.g. December 15, 2020',
-            required: true,
             type: 'date',
             value: this.date
           }
@@ -137,7 +136,6 @@
             key: 'subscribers',
             name: 'Subscribers',
             placeholder: 'e.g. John Doe, Jane Smith',
-            required: true,
             options: this.users,
             props: ['id', 'name'],
             type: 'multi-select',
@@ -147,7 +145,6 @@
             key: 'taskTags',
             name: 'Tags',
             placeholder: 'e.g. Email, Manual',
-            required: true,
             options: this.tags,
             props: ['id', 'name'],
             type: 'multi-select',
