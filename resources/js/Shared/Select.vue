@@ -90,6 +90,9 @@
       }
     },
     watch: {
+      defaultOption(): void {
+        this.updateSelectedOption(this.defaultOption);
+      },
       reset(): void {
         if (this.reset === true) {
           this.resetHandler();
@@ -152,7 +155,8 @@
     <span
       class='selected-option'
       :style='selectedOptionStyle'
-      :class='selectedOptionClasses'>
+      :class='selectedOptionClasses'
+      @click.self.stop='showOptionList = !showOptionList'>
       {{ (selectedOption !== null && targetProps !== undefined)
         ? selectedOption[targetProps[targetProps.length - 1]]
         : selectedOption
@@ -234,6 +238,17 @@
       overflow-y: auto;
       border: $light-dark-slim;
       @include borderRadius(5px);
+
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.3);
+        @include borderRadius(4px);
+      }
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
 
       li {
         list-style-type: none;

@@ -39,6 +39,37 @@ class Task extends Model
         'link'
     ];
 
+    public static $filters = [
+        'Most Recent',
+        'High Priority',
+        'Medium Priority',
+        'Low Priority',
+        'Open',
+        'Pending Reminder',
+        'Pending Close',
+        'Closed',
+        'Starting',
+        'Mid Point',
+        'Testing',
+        'In Review',
+        'Completed',
+        'Email',
+        'Phone',
+        'Internal'
+    ];
+
+    public static $listFields = [
+        'id'            => 'ID',
+        'title'         => 'Title',
+        'owner.name'    => 'Owner',
+        'author.name'   => 'Author',
+        'state.name'    => 'State',
+        'status.name'   => 'Status',
+        'priority.name' => 'Priority',
+        'type.name'     => 'Type',
+        'last_updated'  => 'Last Updated'
+    ];
+
     /**
      * get all tasks for option dropdown
      *

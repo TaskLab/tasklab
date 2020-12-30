@@ -22,6 +22,9 @@
         type: [Array, Object],
         required: true
       },
+      filters: {
+        type: [Array, Object]
+      },
       links: {
         type: Array,
         validator(links): boolean {
@@ -46,7 +49,7 @@
       return {
         gridConfig: {
           minWidth: '1700px',
-          columns:'60px 100px auto 230px 220px 150px 150px 150px 220px',
+          columns:'60px 100px auto 230px 220px 150px 150px 150px 150px 220px',
           gap:'10px'
         }
       }
@@ -61,6 +64,7 @@
       :links='links'
       :fields='fields'
       :checkable='true'
+      :filters='filters'
       :gridConfig='gridConfig'
       :resultsRequestURL='resultsRequestURL'/>
   </Layout>
