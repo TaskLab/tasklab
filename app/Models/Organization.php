@@ -17,7 +17,6 @@ class Organization extends Model
 
     public $timestamps = false;
     protected $table = 'organizations';
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

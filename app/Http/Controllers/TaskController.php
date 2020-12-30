@@ -200,15 +200,19 @@ class TaskController extends Controller
                 'link'            => $payload['link'] ?? NULL
             ]);
 
-            TaskTag::create([
-                'task_id' => $task->id,
-                'tag_id'  => $payload['tags']
-            ]);
+            if (isset($payload['tags']) && $payload['tags'] !== null) {
+                TaskTag::create([
+                    'task_id' => $task->id,
+                    'tag_id'  => $payload['tags']
+                ]);
+            }
 
-            TaskSubscriber::create([
-                'task_id' => $task->id,
-                'user_id' => $payload['subscribers']
-            ]);
+            if (isset($payload['subscribers']) && $payload['subscribers'] !== null) {
+                TaskSubscriber::create([
+                    'task_id' => $task->id,
+                    'user_id' => $payload['subscribers']
+                ]);
+            }
         });
     }
 
