@@ -2,6 +2,7 @@
   import Button from '../Shared/Button.vue'
   import Layout from '../Shared/Layout.vue';
   import Vue from 'vue'
+  import ApexCharts from 'apexcharts';
 
   type HomeData = {
     taskBtns: {
@@ -15,6 +16,12 @@
 
   export default Vue.extend({
     name: 'Home',
+    mounted(): void {
+
+      // @todo turn mock data into database driven data. This is just a place holder until I finish updating the databases.
+      const chart = new ApexCharts(document.querySelector("#chart"), this.chartOptions);
+      chart.render();
+    },
     components: {
       Button,
       Layout
@@ -22,6 +29,50 @@
     props: {
       user: {
         type: Object
+      }
+    },
+    computed: {
+      chartOptions(): any {
+        return {
+          chart: {
+            type: 'bar',
+            height: 350,
+            stacked: true,
+            toolbar: {
+              show: true
+            },
+            zoom: {
+              enabled: true
+            }
+          },
+          series: [{
+            name: 'Org Assigned',
+            data: [151,220,115,1]
+          },
+          {
+            name: 'Org Unassigned',
+            data: [115,120,330,0]
+          },
+          {
+            name: 'Assigned to me',
+            data: [15,20,15,1]
+          }],
+          xaxis: {
+            categories: ['Low', 'Mid', 'High', 'Critical']
+          },
+          yaxis: {
+            title: {
+              text: 'Org Tasks'
+            }
+          },
+          legend: {
+            position: 'right',
+            offsetY: 40
+          },
+          fill: {
+            opacity: 1
+          }
+        }
       }
     },
     data(): HomeData {
@@ -61,6 +112,7 @@
           :styling='btn.styling'
           :classes='btn.classes'
           v-for='(btn, key) in taskBtns'/>
+          <div id='chart'></div>
       </section>
     </div>
   </Layout>
@@ -73,6 +125,10 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-column-gap: 30px;
+    }
+    
+    #chart {
+      max-width: 1000px;
     }
   }
 </style>

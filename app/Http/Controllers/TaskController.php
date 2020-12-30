@@ -235,9 +235,9 @@ class TaskController extends Controller
             'parent'      => 'exists:tasks,id|nullable',
             'priority'    => 'required|exists:task_priorities,id',
             'subscribers' => 'exists:users,id|nullable',
-            'date'        => 'required|after_or_equal:today',
+            'date'        => 'after_or_equal:today|nullable',
             'tags'        => 'exists:tags,id|nullable',
-            'type'        => 'required|exists:task_types,id'
+            'type'        => 'exists:task_types,id|nullable'
         ], $errorMessages);
 
         if ($validator->fails()) {

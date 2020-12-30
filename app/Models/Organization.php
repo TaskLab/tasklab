@@ -17,6 +17,7 @@ class Organization extends Model
 
     public $timestamps = false;
     protected $table = 'organizations';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -53,7 +54,7 @@ class Organization extends Model
 
             $org = Organization::create($orgRecord);
     
-            User::where('id', 1)->update([
+            User::where('id', $userId)->update([
                 'organization_id' => $org->id
             ]);
         });
