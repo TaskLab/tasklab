@@ -47,7 +47,7 @@ class LoginController extends Controller
         try {
             $credentials = $this->getValidatedLoginCredentials($request->json()->all());
             if (Auth::attempt($credentials)) {
-                return Inertia::render('Login', [
+                return Inertia::render('Tasks/List', [
                     'success' => 'User credentials valid.'
                 ]);
             }
@@ -62,7 +62,7 @@ class LoginController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
-        return redirect()->route('home');
+        return Inertia::render('Login');
     }
 
     /**
