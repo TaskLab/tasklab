@@ -8,6 +8,7 @@
 
   type ResultsData = {
     page: number
+    filter: string|null,
     resultsPerPage: number,
     searchTimeout: ReturnType<typeof setTimeout> | null,
     query: string | null
@@ -16,6 +17,7 @@
   type ResultsRequestParams = {
     page: number,
     query?: string,
+    filter?: string,
     resultsPerPage: number
   }
 
@@ -35,6 +37,9 @@
       fields: {
         type: [Array, Object],
         required: true
+      },
+      filters: {
+        type: [Array, Object]
       },
       gridConfig: {
         type: Object,
@@ -70,9 +75,13 @@
       let params = new URLSearchParams(url.search);
       this.query = params.get('query') || null;
     },
+    beforeDestroy(): void {
+      this.query = null;
+    },
     data(): ResultsData {
       return {
         page: 1,
+        filter: null,
         resultsPerPage: 25,
         searchTimeout: null,
         query: null
@@ -108,6 +117,7 @@
       getResultsRequestParams(): ResultsRequestParams {
         return {
           page: this.page,
+          filter: this.filter,
           resultsPerPage: this.resultsPerPage,
           query: this.query,
         }
@@ -122,6 +132,7 @@
       },
       resetResultsHandler(): void {
         this.query = null;
+        this.filter = this.filters[0] || null;
         this.page = 1;
         this.getResults();
       },
@@ -133,17 +144,22 @@
         }
 
         this.query = value;
-        if (this.searchTimeout === null) {
+        if (this.searchTimeout) {
+          clearTimeout(this.searchTimeout);
           this.searchTimeout = setTimeout(() => {
             this.getResults();
           }, 1000);
+
           return;
         }
 
-        clearTimeout(this.searchTimeout);
         this.searchTimeout = setTimeout(() => {
           this.getResults();
         }, 1000);
+      },
+      updateResultsFilter(value): void {
+        this.filter = value;
+        this.getResults();
       },
       updateResultsPerPage(value): void {
         this.resultsPerPage = value;
@@ -179,7 +195,7 @@
       <Button
         text='Reset'
         styling='height:54px;background:#00203FFF;'
-        classes='d-inline-block text-light px-5 mr-2'
+        classes='d-inline-block text-light px-5 mr-3'
         @click='resetResultsHandler'/>
       <Select
         heading='Per Page'
@@ -188,9 +204,18 @@
         :options='[25,50,75]'
         headingStyle='background:#fff;'
         selectedOptionStyle='left:32px'
-        wrapClasses='d-inline-block text-center'
+        wrapClasses='d-inline-block text-center mr-3'
         wrapStyle='width:90px;vertical-align:bottom;padding:0!important;'
         @update='updateResultsPerPage'/>
+      <Select
+        heading='Filter'
+        :options='filters'
+        :disableReset='true'
+        wrapClasses='d-inline-block'
+        headingStyle='background:#fff;'
+        :defaultOption='filter || filters[0]'
+        wrapStyle='width:175px;vertical-align:bottom;padding:0!important;'
+        @update='updateResultsFilter'/>
     </section>
     <section id='results-list'>
       <ul class='m-0 p-0'>

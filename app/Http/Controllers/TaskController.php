@@ -17,6 +17,8 @@ use App\Models\{
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Support\Facades\{
     DB,
     Validator
@@ -43,21 +45,11 @@ class TaskController extends Controller
             'title',
             'owner_id',
             'author_id',
+            'state_id',
             'status_id',
             'priority_id',
             'type_id',
             DB::raw('updated_at AS last_updated')
-        ];
-
-        $fields = [
-            'id'            => 'ID',
-            'title'         => 'Title',
-            'owner.name'    => 'Owner',
-            'author.name'   => 'Author',
-            'status.name'   => 'Status',
-            'priority.name' => 'Priority',
-            'type.name'     => 'Type',
-            'last_updated'  => 'Last Updated'
         ];
 
         $links = [
@@ -67,24 +59,26 @@ class TaskController extends Controller
         $with = [
             'owner',
             'author',
+            'state',
             'status',
             'priority',
             'type'
         ];
 
         $builder = Task::select($select)
+            ->orderBy('last_updated', 'desc')
             ->where('organization_id', $orgID)
             ->with($with);
 
         if (
             isset(request()->all()['query'])
-            && (($query = request()->input('query')) !== '')
+            && ($query = request()->input('query')) !== ''
         ) {
-            $builder->where('id', $query)
-                ->orWhere('title', $query)
-                ->orWhere('description', $query)
-                ->orWhere('title', 'LIKE', "%{$query}%")
-                ->orWhere('description', 'LIKE', "%{$query}%");
+            $builder = $this->getTasksMatchingQueryBuilder($builder, $query);
+        }
+
+        if (isset(request()->all()['filter'])) {
+            $builder = $this->getTasksBasedOnFilter($builder, request()->input('filter'));
         }
 
         $tasks = ($builder->count() > 0)
@@ -92,11 +86,90 @@ class TaskController extends Controller
             : [];
 
         return Inertia::render('Tasks/List', [
-            'fields'            => $fields,
+            'fields'            => Task::$listFields,
+            'filters'           => Task::$filters,
             'links'             => $links,
             'resultsRequestURL' => '/tasks',
             'tasks'             => $tasks
         ]);
+    }
+
+    /**
+     * return builder for tasks that match query
+     *
+     * @param Builder $builder
+     * @param string $query
+     * @return Builder
+     */
+    private function getTasksMatchingQueryBuilder(Builder &$builder, string $query): Builder
+    {
+        $userIds = User::where('name', $query)
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->pluck('id')
+            ->toArray();
+
+        $statusIds = TaskStatus::where('name', $query)
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->pluck('id')
+            ->toArray();
+
+        $priorityIds = TaskPriority::where('name', $query)
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->pluck('id')
+            ->toArray();
+
+        $typeIds = TaskType::where('name', $query)
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->pluck('id')
+            ->toArray();
+
+        $stateIds = TaskState::where('name', $query)
+            ->orWhere('name', 'LIKE', "%{$query}%")
+            ->pluck('id')
+            ->toArray();
+
+        return $builder->where('id', $query)
+            ->orWhere('title', $query)
+            ->orWhereIn('owner_id', $userIds)
+            ->orWhereIn('author_id', $userIds)
+            ->orWhereIn('status_id', $statusIds)
+            ->orWhereIn('priority_id', $priorityIds)
+            ->orWhereIn('type_id', $typeIds)
+            ->orWhereIn('state_id', $stateIds)
+            ->orWhere('description', $query)
+            ->orWhere('title', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%");
+    }
+
+    /**
+     * return builder for tasks based on filter
+     *
+     * @param Builder $builder
+     * @param string $filter
+     * @return Builder
+     */
+    private function getTasksBasedOnFilter(Builder &$builder, string $filter): Builder
+    {
+        if (strpos($filter, 'Priority') > -1) {
+            $priority = explode(' ', $filter)[0];
+            $priority = TaskPriority::where('name', $priority)->first();
+
+            return $builder->where('priority_id', $priority->id);
+        }
+
+        if ($state = TaskState::where('name', $filter)->first()) {
+            return $builder->where('state_id', $state->id);
+        }
+
+        if ($status = TaskStatus::where('name', $filter)->first()) {
+            return $builder->where('status_id', $status->id);
+        }
+
+        if ($type = TaskType::where('name', $filter)->first()) {
+            return $builder->where('type_id', $type->id);
+        }
+
+        return $builder;
     }
 
     /**
