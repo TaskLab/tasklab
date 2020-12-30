@@ -15,6 +15,7 @@ class Organization extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'organizations';
 
     /**
@@ -24,7 +25,7 @@ class Organization extends Model
      */
     protected $fillable = [
         'name',
-        'organization_setting_id',
+        'organization_settings_id',
         'active',
     ];
 
@@ -45,10 +46,11 @@ class Organization extends Model
             ]);
     
             $orgRecord = [
-                'name'                    => $orgName,
-                'organization_setting_id' => $orgSetting->id,
-                'active'                  => true
+                'name'                     => $orgName,
+                'organization_settings_id' => $orgSetting->id,
+                'active'                   => true
             ];
+
             $org = Organization::create($orgRecord);
     
             User::where('id', 1)->update([

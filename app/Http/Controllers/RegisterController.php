@@ -60,9 +60,7 @@ class RegisterController extends Controller
             ]);
         }
 
-        return Inertia::render('Register', [
-            'success' => 'New account created successfully.'
-        ]);
+        return Inertia::render('Tasks/List');
     }
 
     /**
@@ -104,7 +102,7 @@ class RegisterController extends Controller
             'firstname'    => 'required|alpha',
             'lastname'     => 'required|alpha',
             'email'        => 'required|unique:users,email|email:rfc',
-            'organization' => 'unique:organization,org_name|alpha_num',
+            'organization' => 'required|alpha_num',
             'password'     => 'required|min:8'
         ], $errorMessages);
 

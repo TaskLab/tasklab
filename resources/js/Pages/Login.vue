@@ -79,7 +79,12 @@
             replace: false,
             preserveState: true,
             preserveScroll: false,
-            _token: this.csrfToken
+            _token: this.csrfToken,
+            onSuccess: (res: any) => {
+              if ('error' in res.props) {
+                alert(res.props.error);
+              }
+            }
           });
         } catch (e) {
           alert(e.message);
