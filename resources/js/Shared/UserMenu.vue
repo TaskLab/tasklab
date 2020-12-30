@@ -66,6 +66,7 @@
     top: 60px;
     left: 120%;
     width: 100%;
+    background: rgb(244,248,249);
     @include transform(translateX(0));
     @include transition(all 0.2s ease-out);
     @include boxShadow(0 0 10px rgba(0,0,0,0.2));

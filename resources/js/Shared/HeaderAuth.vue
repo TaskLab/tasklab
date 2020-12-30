@@ -12,6 +12,12 @@
     components: {
       UserMenu
     },
+    mounted(): void {
+      document.addEventListener('click', e => this.toggleUserMenu(e));
+    },
+    beforeDestroy(): void {
+      document.removeEventListener('click', e => this.toggleUserMenu(e));
+    },
     data(): HeaderAuthData {
       return {
         showUserMenu: false
@@ -23,20 +29,35 @@
         const nameArr: string[] = this.authenticatedUser.name.split(' ');
         return `${nameArr[0][0] + nameArr[nameArr.length - 1][0]}`;
       }
+    },
+    methods: {
+      toggleUserMenu(e: MouseEvent): void {
+        if (
+          this.showUserMenu === true
+          && e.target !== this.$refs.userLogo
+          && e.target !== this.$refs.username
+        ) {
+          this.showUserMenu = false;
+        }
+      }
     }
   })
 </script>
 
 <template>
-  <div id='header-auth'>
+  <div
+    ref='headerAuth'
+    id='header-auth'>
     <span
       id='user-logo'
+      ref='userLogo'
       class='d-inline-block font-weight-bold text-center'
       @click='showUserMenu = !showUserMenu'>
       {{ userInitials }}
     </span>
     <span
       id='username'
+      ref='username'
       class='d-inline-block text-white font-weight-bold'
       @click='showUserMenu = !showUserMenu'>
       {{ this.authenticatedUser.name }}
