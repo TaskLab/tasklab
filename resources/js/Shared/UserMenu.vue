@@ -33,9 +33,8 @@
     },
     methods: {
       async clickHandler(path: string): Promise<void> {
-        const res = await axios.post('/logout');
         this.$store.commit('updateAuthenticatedUser', null);
-        window.location.href = '/';
+        this.$inertia.post('/logout');
       }
     }
   })

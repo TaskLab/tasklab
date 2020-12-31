@@ -17,6 +17,9 @@
   export default Vue.extend({
     name: 'Home',
     mounted(): void {
+      if (this.user) {
+        this.$store.commit('updateAuthenticatedUser', this.user);
+      }
 
       // @todo turn mock data into database driven data. This is just a place holder until I finish updating the databases.
       const chart = new ApexCharts(document.querySelector("#chart"), this.chartOptions);
