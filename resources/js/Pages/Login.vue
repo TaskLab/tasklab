@@ -75,17 +75,7 @@
       loginHandler(): void {
         try {
           const payload: string = this.getValidatedPayload();
-          this.$inertia.post('/login', payload, {
-            replace: false,
-            preserveState: true,
-            preserveScroll: false,
-            _token: this.csrfToken,
-            onSuccess: (res: any) => {
-              if ('error' in res.props) {
-                alert(res.props.error);
-              }
-            }
-          });
+          this.$inertia.post('/login', payload);
         } catch (e) {
           alert(e.message);
         }

@@ -40,18 +40,17 @@ class LoginController extends Controller
      * authenticate
      *
      * @param Request $request
-     * @return InertiaResponse
      */
-    public function login(Request $request): InertiaResponse
+    public function login(Request $request)
     {
         try {
             $credentials = $this->getValidatedLoginCredentials($request->json()->all());
-            if (Auth::attempt($credentials)) {
-                return Inertia::render('Tasks/List', [
-                    'success' => 'User credentials valid.'
-                ]);
+            if (Auth::attempt($credentials) === false) {
+                throw new Exception('Invalid login credentials.');
             }
-            throw new Exception('Invalid login credentials.');
+
+            $request->session()->regenerate();
+            return redirect()->route('home');
         } catch (Exception $e) {
             return Inertia::render('Login', [
                 'error' => $e->getMessage()
@@ -62,7 +61,7 @@ class LoginController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
-        return Inertia::render('Login');
+        return redirect()->route('login');
     }
 
     /**

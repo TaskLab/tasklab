@@ -29,6 +29,13 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     // welcome and sign-up page
+    if (Auth::check()) {
+        $user = Auth::user();
+        return Inertia::render('Home', [
+            'user' => $user
+        ]);
+    }
+
     return Inertia::render('Home');
 })->name('home');
 
