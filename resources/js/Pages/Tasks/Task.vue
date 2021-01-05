@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import Breadcrumbs from '../../Shared/Breadcrumbs.vue';
   import Layout from '../../Shared/Layout.vue';
   import Select from '../../Shared/Select.vue';
   import Vue from 'vue'
@@ -6,6 +7,7 @@
   export default Vue.extend({
     name: 'Task',
     components: {
+      Breadcrumbs,
       Layout,
       Select
     },
@@ -21,6 +23,20 @@
       },
       users: {
         type: Array
+      }
+    },
+    computed: {
+      crumbs(): any[] {
+        return [
+          {
+            name: 'Tasks',
+            link: '/tasks'
+          },
+          {
+            name: this.task.title,
+            link: `/tasks/${this.task.id}`
+          }
+        ]
       }
     },
     mounted(): void {
@@ -40,6 +56,9 @@
 <template>
   <Layout>
     <div id='task'>
+      <Breadcrumbs
+        wrapClasses='p-0'
+        :crumbs='crumbs'/>
       <h4 class='mb-5'>Task #{{ task.id }}</h4>
       <section class='grid-col-3 mb-3'>
         <p><b>Title:</b> {{ task.title }}</p>

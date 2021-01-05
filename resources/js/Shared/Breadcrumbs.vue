@@ -26,10 +26,10 @@
         type: Array,
         required: true
       },
-      crumbsWrapClasses: {
+      wrapClasses: {
         type: String
       },
-      crumbsWrapStyle: {
+      wrapStyle: {
         type: String
       }
     },
@@ -78,8 +78,8 @@
 <template>
   <ul
     id='breadcrumbs'
-    :class='crumbsWrapClasses'
-    :style='crumbsWrapStyle'>
+    :class='wrapClasses'
+    :style='wrapStyle'>
     <li
       :key='`c-${key}`'
       class='d-inline-block'
