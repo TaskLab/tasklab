@@ -266,7 +266,7 @@
 
 <template>
   <Layout>
-    <div id='create-task' class='p-5'>
+    <div id='create-task'>
       <h4 class='font-weight-bold mb-4'>NEW TASK</h4>
       <form id='task-form'>
         <section
@@ -277,7 +277,7 @@
             v-for='(field, key) in fieldsOne'>
             <Input
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               :placeholder='field.placeholder'
               :reset='resetForm'
               :type='field.type'
@@ -287,7 +287,7 @@
             <Select
               returnKey='id'
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               listStyle='background:rgb(244, 246, 247);'
               :options='field.options'
               :placeholder='field.placeholder'
@@ -307,7 +307,7 @@
             v-for='(field, key) in fieldsTwo'>
             <Input
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               :placeholder='field.placeholder'
               :reset='resetForm'
               :type='field.type'
@@ -317,7 +317,7 @@
             <Select
               returnKey='id'
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               listStyle='background:rgb(244, 246, 247);'
               :options='field.options'
               :placeholder='field.placeholder'
@@ -346,7 +346,7 @@
             v-for='(field, key) in fieldsThree'>
             <Input
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               :placeholder='field.placeholder'
               :reset='resetForm'
               :type='field.type'
@@ -356,7 +356,7 @@
             <Select
               returnKey='id'
               :heading='field.name'
-              headingStyle='background:rgb(244, 246, 247);'
+              headingStyle='background:#fff;'
               listStyle='background:rgb(244, 246, 247);'
               :options='field.options'
               :placeholder='field.placeholder'
@@ -390,15 +390,15 @@
       #grid-three {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-column-gap: 15px;
-        background: rgb(244, 246, 247);
+        grid-gap: 15px;
+        background: #fff;
         @include boxShadow(0 0 10px rgba(0,0,0,0.1));
       }
 
       #grid-two {
         display: grid;
         grid-gap: 15px;
-        background: rgb(244, 246, 247);
+        background: #fff;
         grid-template-columns: 1fr 2fr;
         grid-template-rows: auto;
         grid-template-areas:
@@ -438,7 +438,7 @@
                 font-weight: bold;
                 font-size: 0.7rem;
                 color: #00203FFF;
-                background: rgb(244, 246, 247);
+                background: #fff;
               }
 
               textarea {
@@ -453,6 +453,37 @@
                   color: rgba(0,0,0,0.4);
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 850px) {
+    #create-task {
+
+      #task-form {
+
+        #grid-one,
+        #grid-three {
+          grid-template-columns: repeat(1, 1fr);
+        }
+
+        #grid-two {
+          grid-template-columns: unset;
+          grid-template-rows: repeat(1, 1fr);
+          grid-template-areas:
+            "top"
+            "middle"
+            "bottom"
+            "description";
+
+          > * {
+
+            &:last-of-type {
+              height: 150px;
+              grid-row: auto;
             }
           }
         }
