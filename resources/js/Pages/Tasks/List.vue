@@ -48,7 +48,7 @@
     data(): ListData {
       return {
         gridConfig: {
-          minWidth: '1700px',
+          minWidth: '1800px',
           columns:'60px 100px auto 230px 220px 150px 150px 150px 150px 220px',
           gap:'10px'
         }
