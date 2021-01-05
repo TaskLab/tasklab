@@ -1,13 +1,24 @@
 <script lang='ts'>
   import Breadcrumbs from '../../Shared/Breadcrumbs.vue';
+  import Input from '../../Shared/Input.vue';
   import Layout from '../../Shared/Layout.vue';
   import Select from '../../Shared/Select.vue';
   import Vue from 'vue'
+
+  type TaskData = {
+    cc: string,
+    message: string,
+    resetForm: boolean,
+    showReplyForm: boolean,
+    subject: string,
+    to: string
+  }
 
   export default Vue.extend({
     name: 'Task',
     components: {
       Breadcrumbs,
+      Input,
       Layout,
       Select
     },
@@ -25,7 +36,20 @@
         type: Array
       }
     },
+    data(): TaskData {
+      return {
+        to: '',
+        cc: '',
+        resetForm: false,
+        subject: '',
+        showReplyForm: false,
+        message: ''
+      }
+    },
     computed: {
+      authuser(): object {
+        return this.$store.state.authenticatedUser
+      },
       crumbs(): any[] {
         return [
           {
@@ -50,12 +74,17 @@
 
       this.$refs.description.innerHTML = descriptionContent;
     },
+    methods: {
+      updateReplyFormField(field: string, value: string): void {
+        this[field] = value;
+      }
+    }
   })
 </script>
 
 <template>
   <Layout>
-    <div id='task'>
+    <div id='task' class='p-2'>
       <Breadcrumbs
         wrapClasses='p-0'
         :crumbs='crumbs'/>
@@ -92,7 +121,82 @@
           heading='State'/>
       </section>
       <p><b>Description:</b></p>
-      <div class='description p-3 rounded' ref='description'></div>
+      <div class='description p-3 rounded mb-4' ref='description'></div>
+      <section
+        id='reply-forward-wrap'
+        v-if='authuser && authuser.id === task.owner_id && showReplyForm === false'>
+        <button
+          type='button'
+          id='reply-btn'
+          @click='showReplyForm = !showReplyForm'
+          class='d-inline-block px-5 mr-3 rounded text-light'>
+          <b>Reply</b>
+        </button>
+        <button
+          type='button'
+          id='reply-btn'
+          @click='showReplyForm = !showReplyForm'
+          class='d-inline-block px-5 rounded text-light'>
+          <b>Forward</b>
+        </button>
+      </section>
+      <hr v-else/>
+      <section
+        id='reply-wrap'
+        v-if='showReplyForm === true'>
+        <div class='fields-wrap'>
+          <div class='rounded-top p-3'>
+            <Input
+              type='text'
+              heading='To'
+              :required='true'
+              :reset='resetForm'
+              wrapClasses='w-100 m-0'
+              headingStyle='background:#fff;'
+              placeholder='e.g. jdoe@email.com'
+              @update="updateReplyFormField('to', $event)"/>
+            <Input
+              type='text'
+              heading='CC'
+              :reset='resetForm'
+              wrapClasses='w-100 m-0'
+              headingStyle='background:#fff;'
+              placeholder='e.g. jdoe@email.com'
+              @update="updateReplyFormField('cc', $event)"/>
+            <Input
+              type='text'
+              heading='Subject'
+              :reset='resetForm'
+              wrapClasses='w-100 m-0'
+              headingStyle='background:#fff;'
+              placeholder='e.g. Solution for this task'
+              @update="updateReplyFormField('subject', $event)"/>
+          </div>
+          <div class='rounded-bottom px-3 pb-3 mb-3'>
+            <label
+              class='rounded mb-0 d-block'>
+              <span><b>DESCRIPTION</b></span>
+              <textarea
+                class='p-3 rounded d-block h-100 w-100'
+                placeholder='e.g. This task is for the login page.'
+                v-model='message'></textarea>
+            </label>
+          </div>
+        </div>
+        <button
+          type='button'
+          class='d-inline-block px-5 mr-3 rounded text-light form-footer-btn'
+          v-if='authuser && authuser.id === task.owner_id'>
+          <b>Send</b>
+        </button>
+        <button
+          type='button'
+          @click='showReplyForm = false'
+          class='d-inline-block bg-danger px-5 rounded text-light form-footer-btn'
+          v-if='authuser && authuser.id === task.owner_id'>
+          <b>Cancel</b>
+        </button>
+      </section>
     </div>
   </Layout>
 </template>
@@ -115,6 +219,77 @@
 
     .description {
       background: rgba(0,0,0,0.1);
+    }
+
+    .form-footer-btn {
+      height: 54px;
+      border: none;
+
+      &:first-of-type {
+        background: rgb(0, 32, 63);
+      }
+
+      &:active, &:focus {
+        outline: none;
+      }
+    }
+
+    #reply-forward-wrap {
+
+      button {
+        height: 54px;
+        border: none;
+        background: rgb(0, 32, 63);
+      }
+    }
+
+    #reply-wrap {
+
+      .fields-wrap {
+        @include boxShadow(0 0 10px rgba(0,0,0,0.1));
+
+        > div {
+          background: #fff;
+
+          &:first-of-type {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+          }
+
+          &:last-of-type {
+
+            label {
+              height: 150px;
+              position: relative;
+
+              span {
+                position: absolute;
+                top: -6px;
+                left: 9px;
+                padding: 0 7.5px;
+                font-weight: bold;
+                font-size: 0.7rem;
+                color: #00203FFF;
+                background: #fff;
+              }
+
+              textarea {
+                background: transparent;
+                border: $light-dark-slim;
+
+                &:focus {
+                  outline: none;
+                }
+
+                &::placeholder {
+                  color: rgba(0,0,0,0.4);
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 </style>
