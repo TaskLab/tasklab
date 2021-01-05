@@ -27,18 +27,6 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    // welcome and sign-up page
-    if (Auth::check()) {
-        $user = Auth::user();
-        return Inertia::render('Home', [
-            'user' => $user
-        ]);
-    }
-
-    return Inertia::render('Home');
-})->name('home');
-
 /** GUEST-DEPENDENT ROUTES **/
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
@@ -49,6 +37,13 @@ Route::middleware('guest')->group(function () {
 
 /** AUTH-DEPENDENT ROUTES **/
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        $user = Auth::user();
+        return Inertia::render('Home', [
+            'user' => $user
+        ]);
+    })->name('home');
+
     Route::post('/logout', [LoginController::class, 'logout']);
     Route::prefix('org')->group(function () {
         Route::post('create', [OrganizationController::class, 'create']);
