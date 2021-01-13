@@ -297,7 +297,7 @@
         type='button'
         title='Scroll Left'
         :class='`h-scroll-btn h-scroll-btn-${_uid}`'
-        v-show='results !== null && results.length > 0'
+        v-show='results !== null && results !== undefined && results.length > 0'
         @click="sideScrollHandler('left')">
         <i class='fas fa-arrow-left'></i>
       </button>
@@ -305,7 +305,7 @@
         type='button'
         title='Scroll Right'
         :class='`h-scroll-btn h-scroll-btn-${_uid}`'
-        v-show='results !== null && results.length > 0'
+        v-show='results !== null && results !== undefined && results.length > 0'
         @click="sideScrollHandler('right')">
         <i class='fas fa-arrow-right'></i>
       </button>
