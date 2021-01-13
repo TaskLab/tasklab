@@ -75,7 +75,13 @@
       loginHandler(): void {
         try {
           const payload: string = this.getValidatedPayload();
-          this.$inertia.post('/login', payload);
+          this.$inertia.post('/login', payload, {
+            onSuccess: data => {
+              if ('error' in data.props) {
+                alert(data.props.error);
+              }
+            }
+          });
         } catch (e) {
           alert(e.message);
         }
