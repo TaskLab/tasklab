@@ -225,7 +225,7 @@ class TaskController extends Controller
     {
         try {
             $payload = $this->getValidatedTaskPayload($request->json()->all());
-            $this->submitNewTaskPayload($payload);
+            $taskId = $this->submitNewTaskPayload($payload);
         } catch (Exception $e) {
             $properties = array_merge(
                 ['error' => $e->getMessage()],
@@ -239,7 +239,7 @@ class TaskController extends Controller
         }
 
         $properties = array_merge(
-            ['result' => 'New task created successfully.'],
+            ['result' => 'New task created successfully.', 'task_id' => $taskId],
             $this->getRequiredNewTaskProperties()
         );
 
@@ -253,11 +253,11 @@ class TaskController extends Controller
      * submit new task, task subscribers, and task tags to database
      *
      * @param array $payload
-     * @return void
+     * @return int
      */
-    private function submitNewTaskPayload(array $payload): void
+    private function submitNewTaskPayload(array $payload): int
     {
-        DB::transaction(function () use ($payload): void {
+        $taskId = DB::transaction(function () use ($payload): int {
             $task = Task::create([
                 'title'           => $payload['title'],
                 'owner_id'        => $payload['owner'],
@@ -286,7 +286,11 @@ class TaskController extends Controller
                     'user_id' => $payload['subscribers']
                 ]);
             }
+
+            return $task->id;
         });
+
+        return $taskId;
     }
 
     /**

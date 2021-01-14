@@ -246,6 +246,11 @@
             preserveState: true,
             preserveScroll: false,
             _token: this.csrfToken,
+            onSuccess: data => {
+              if ('task_id' in data.props) {
+                this.$inertia.visit(`/tasks/${data.props.task_id}`);
+              }
+            },
             onFinish: () => {
               if (vm.error !== undefined) {
                 alert(vm.error);

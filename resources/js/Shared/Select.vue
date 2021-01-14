@@ -180,7 +180,7 @@
         @click='updateSelectedOption(option)'>
         {{ (targetProps !== undefined)
           ? targetProps.map(p => option[p])
-            .reduce((s, p) => s + '&nbsp; - &nbsp;' + p)
+            .reduce((_, p) => p)
           : option
         }}
       </li>
