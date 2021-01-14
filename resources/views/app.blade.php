@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <title>tasklab</title>
+        <title>{{ strtolower(env('APP_NAME')) }}</title>
         <meta charset="utf-8" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="auth-user" content="{{ (Auth::user()) }}">
