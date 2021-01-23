@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
+    DashboardController,
     LoginController,
     RegisterController,
     TaskController,
@@ -45,15 +46,22 @@ Route::middleware('auth')->group(function () {
     })->name('home');
 
     Route::post('/logout', [LoginController::class, 'logout']);
+
+    /** ORGANIZATION ROUTES  **/
     Route::prefix('org')->group(function () {
         Route::post('create', [OrganizationController::class, 'create']);
         Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
     });
-
     Route::middleware('auth.org')->get('/missing-org', function () {
         return Inertia::render('MissingOrg');
     })->name('missing-org');
 
+    /** DASHBOARD ROUTES **/
+    Route::prefix('dashboard')->group(function() {
+        Route::get('org-user-stats', [DashboardController::class, 'getOrgUserStats']);
+    });
+
+    /** TASK ROUTES **/
     Route::resource('tasks', TaskController::class);
 });
 
