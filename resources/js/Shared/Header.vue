@@ -128,7 +128,7 @@
   #app-header {
     width: 100%;
     height: 60px;
-    position: relative;
+    position: fixed;
     background: #00203FFF;
 
     .logo {
