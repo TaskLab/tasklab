@@ -78,7 +78,6 @@
       cursor: default;
       height: calc(100vh - 60px);
       background: #00203FFF;
-      border-top: 1px solid rgba(0,0,0,0.3);
       border-right: 1px solid rgba(0,0,0,0.3);
       @include transition(all 0.2s ease-out);
 
