@@ -49,9 +49,9 @@
 
   #wrapper {
     width: 100%;
-    padding: 35px;
     max-width: 1600px;
     background: #F4F8F9;
+    padding: 100px 35px 35px;
     min-height: calc(100vh - 60px);
     @include transition(all 0.2s ease-out);
   }
