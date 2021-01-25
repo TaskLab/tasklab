@@ -95,7 +95,9 @@
         <p><b>Created:</b> {{ new Date(task.created_at).toLocaleDateString() }}</p>
       </section>
       <section class='grid-col-3 mb-4'>
+        <p v-if='task.owner_id'><b>Owner:</b> {{ task.owner.name }}</p>
         <Select
+          v-else
           :options='users'
           wrapClasses='w-100'
           placeholder='e.g. John Doe'
