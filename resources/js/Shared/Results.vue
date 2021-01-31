@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import axios from 'axios'
   import Button from '../Shared/Button.vue'
   import Checkbox from '../Shared/Checkbox.vue'
   import Input from '../Shared/Input.vue'
@@ -9,6 +10,7 @@
   type ResultsData = {
     page: number
     filter: string|null,
+    dataItems: Object|null,
     listElement: HTMLElement|null,
     horizontalScrollBtns: HTMLButtonElement[]|null,
     overflowShadows: HTMLDivElement[]|null,
@@ -53,7 +55,7 @@
             && config.hasOwnProperty('gap');
         }
       },
-      items: {
+      propItems: {
         type: [Array, Object],
         required: true
       },
@@ -68,7 +70,7 @@
           });
         }
       },
-      resultsRequestURL: {
+      getRequestURL: {
         type: String,
         required: true
       }
@@ -89,6 +91,7 @@
       return {
         page: 1,
         filter: null,
+        dataItems: null,
         listElement: null,
         horizontalScrollBtns: null,
         overflowShadows: null,
@@ -99,18 +102,23 @@
     },
     computed: {
       results(): any[] {
-        return this.items.data;
+        return (this.dataItems)
+          ? this.dataItems.data
+          : this.propItems.data;
       }
     },
     methods: {
+      createNewItem(): void {
+        this.$inertia.get(this.newItemPath)
+      },
       fieldIsLink(key: string): boolean {
         return this.links.map((l: {key: string}): string => l.key)
           .some((lk: string): boolean => lk === key);
       },
       getLinkPath(key: string, item: any): string {
         return this.links
-          .find((link: {key: string}): boolean => link.key === key)
-          .path + item[key];
+          .find((link: {key: string}): boolean => link.key === key).path
+          .replace(/({})/g, item[key]);
       },
       getResultFieldValue(item: any, key: string): string|number {
         return key.includes('.')
@@ -119,10 +127,14 @@
             : ''
           : item[key];
       },
-      getResults(): void {
-        const options = { preserveState: true };
-        const params: ResultsRequestParams = this.getResultsRequestParams();
-        this.$inertia.get(this.resultsRequestURL, params, options);
+      async getResults(): Promise<void> {
+        try {
+          const params: ResultsRequestParams = this.getResultsRequestParams();
+          const { data } = await axios.get(this.getRequestURL, { params });
+          this.dataItems = data;
+        } catch (err) {
+          alert(err.message);
+        }
       },
       getResultsRequestParams(): ResultsRequestParams {
         return {
@@ -170,6 +182,10 @@
         }
       },
       resultsQueryUpdateHandler(value: string): void {
+        if (value.trim() !== '' && value.trim() === this.query) {
+          return;
+        }
+
         if (value.trim() === '') {
           this.query = null;
           this.getResults();
@@ -201,8 +217,8 @@
       },
       setOverflowShadows(): void {
         setTimeout(() => {
-          const [leftShadow, rightShadow] = this.overflowShadows;
-          const [leftScrollBtn, rightScrollBtn] = this.horizontalScrollBtns;
+          const [, rightShadow] = this.overflowShadows;
+          const [, rightScrollBtn] = this.horizontalScrollBtns;
 
           if (this.listElement.offsetWidth < this.listElement.children[0].offsetWidth) {
             rightShadow.classList.add('active');
@@ -217,7 +233,6 @@
       sideScrollHandler(side: string): void {
         const widthOfTable: number = this.listElement.offsetWidth;
         const resultRowWidth: number = this.listElement.children[0].offsetWidth;
-        const tableRowOverflow: number = resultRowWidth - widthOfTable;
 
         if (side === 'right') {
           this.listElement.scrollLeft = ((widthOfTable * 2) < resultRowWidth)
@@ -243,18 +258,6 @@
 
 <template>
   <main class='results'>
-    <section>
-      <h4 class='mb-5 d-inline-block mr-3'>Tasks</h4>
-      <small
-        v-if='items !== undefined'
-        class='text-secondary d-inline-block font-weight-bold mr-3'>
-        {{ items.total }} Total
-      </small>
-      <small
-        class='text-secondary d-inline-block font-weight-bold float-right'>
-        <inertia-link href='/tasks/create'>Create a Task</inertia-link>
-      </small>
-    </section>
     <section
       class='result-tools mb-4 p-3 rounded'>
       <Input
@@ -267,7 +270,7 @@
       <Button
         text='Reset'
         styling='height:54px;background:#00203FFF;'
-        classes='d-inline-block text-light px-5 mr-3'
+        classes='d-inline-block text-light px-5 mr-2 font-weight-bold'
         @click='resetResultsHandler'/>
       <Select
         heading='Per Page'
@@ -276,18 +279,28 @@
         :options='[25,50,75]'
         headingStyle='background:#fff;'
         selectedOptionStyle='left:32px'
-        wrapClasses='d-inline-block text-center mr-3'
+        wrapClasses='d-inline-block text-center mr-2'
         wrapStyle='width:90px;vertical-align:bottom;padding:0!important;'
         @update='updateResultsPerPage'/>
       <Select
         heading='Filter'
         :options='filters'
         :disableReset='true'
-        wrapClasses='d-inline-block'
         headingStyle='background:#fff;'
+        wrapClasses='d-inline-block mr-2'
         :defaultOption='filter || filters[0]'
         wrapStyle='width:175px;vertical-align:bottom;padding:0!important;'
         @update='updateResultsFilter'/>
+      <Button
+        icon='fas fa-plus'
+        title='Create new item'
+        styling='height:54px;background:#00203FFF;'
+        classes='d-inline-block text-light px-4 mr-2 font-weight-bold'
+        @click='createNewItem'/>
+      <div class='d-inline-block total-wrap rounded'>
+        <span>TOTAL</span>
+        <span><b>{{ propItems.total }}</b></span>
+      </div>
     </section>
     <section
       class='list-wrap'>
@@ -313,7 +326,7 @@
         :class='`m-0 p-0 list-${_uid}`'
         @scroll='resultsScrollHandler'>
         <li
-          class='headers'
+          class='headers mb-2'
           :style='[getResultRowStyling()]'>
           <span v-if='checkable'></span>
           <span
@@ -358,6 +371,32 @@
 
     .result-tools {
       background: #fff;
+
+      .total-wrap {
+        height: 54px;
+        padding: 0 35px;
+        position: relative;
+        border: $light-dark-slim;
+        vertical-align: bottom;
+
+        span {
+
+          &:first-of-type {
+            top: -6px;
+            position: absolute;
+            padding: 0 7.5px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            color: #00203FFF;
+            background: white;
+            @extend %abs-horiz-center;
+          }
+
+          &:last-of-type {
+            @extend %abs-center;
+          }
+        }
+      }
     }
 
     .list-wrap {
@@ -395,7 +434,6 @@
           width: 40px;
           height: 40px;
           border: none;
-          z-index: 1;
           background: #fff;
           @include boxShadow(0 0 10px rgba(0,0,0,0.1));
           @include borderRadius(50%);
