@@ -36,12 +36,15 @@
           })
         }
       },
-      resultsRequestURL: {
+      newItemPath: {
+        type: String
+      },
+      getRequestURL: {
         required: true,
         type: String
       },
       tasks: {
-        type: [Array, Object],
+        type: Object,
         required: true
       }
     },
@@ -49,7 +52,7 @@
       return {
         gridConfig: {
           minWidth: '1800px',
-          columns:'60px 100px auto 230px 220px 150px 150px 150px 150px 220px',
+          columns:'100px auto 230px 220px 200px 150px 150px 150px 220px',
           gap:'10px'
         }
       }
@@ -59,13 +62,16 @@
 
 <template>
   <Layout>
-    <Results
-      :items='tasks'
-      :links='links'
-      :fields='fields'
-      :checkable='true'
-      :filters='filters'
-      :gridConfig='gridConfig'
-      :resultsRequestURL='resultsRequestURL'/>
+    <div id='tasks'>
+      <h4 class='mb-5 font-weight-bold'>Tasks</h4>
+      <Results
+        :links='links'
+        :fields='fields'
+        :filters='filters'
+        :propItems='tasks'
+        :gridConfig='gridConfig'
+        :newItemPath='newItemPath'
+        :getRequestURL='getRequestURL'/>
+    </div>
   </Layout>
 </template>

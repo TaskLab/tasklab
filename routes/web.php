@@ -57,12 +57,17 @@ Route::middleware('auth')->group(function () {
     })->name('missing-org');
 
     /** DASHBOARD ROUTES **/
-    Route::prefix('dashboard')->group(function() {
+    Route::prefix('dashboard')->group(function () {
         Route::get('org-user-stats', [DashboardController::class, 'getOrgUserStats']);
     });
 
     /** TASK ROUTES **/
-    Route::resource('tasks', TaskController::class);
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'index']);
+        Route::get('/create', [TaskController::class, 'create']);
+        Route::get('/get', [TaskController::class, 'getListOfTasks']);
+        Route::get('{taskId}', [TaskController::class, 'show']);
+    });
 });
 
 

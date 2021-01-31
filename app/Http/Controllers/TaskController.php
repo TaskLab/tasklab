@@ -18,6 +18,7 @@ use App\Models\{
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Illuminate\Support\Facades\{
     DB,
@@ -32,11 +33,34 @@ use Inertia\{
 class TaskController extends Controller
 {
     /**
-     * render page with list of existing tasks
+     * get inertia response for task list page
      *
      * @return InertiaResponse
      */
     public function index(): InertiaResponse
+    {
+        $links = [
+            ['key' => 'id', 'path' => '/tasks/{}']
+        ];
+
+        $tasks = $this->getListOfTasks();
+
+        return Inertia::render('Tasks/List', [
+            'fields'            => Task::$listFields,
+            'filters'           => Task::$filters,
+            'getRequestURL'     => '/tasks/get',
+            'links'             => $links,
+            'newItemPath'       => '/tasks/create',
+            'tasks'             => $tasks
+        ]);
+    }
+
+    /**
+     * get list of all or specified tasks
+     *
+     * @return void
+     */
+    public function getListOfTasks(): LengthAwarePaginator
     {
         $orgID = Auth::user()->organization_id;
 
@@ -50,10 +74,6 @@ class TaskController extends Controller
             'priority_id',
             'type_id',
             DB::raw('updated_at AS last_updated')
-        ];
-
-        $links = [
-            ['key' => 'id', 'path' => '/tasks/']
         ];
 
         $with = [
@@ -85,12 +105,22 @@ class TaskController extends Controller
             ? $builder->paginate((int) request()->input('resultsPerPage'))
             : [];
 
-        return Inertia::render('Tasks/List', [
-            'fields'            => Task::$listFields,
-            'filters'           => Task::$filters,
-            'links'             => $links,
-            'resultsRequestURL' => '/tasks',
-            'tasks'             => $tasks
+        return $tasks;
+    }
+
+    /**
+     * get task list response
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getListOfTasksAsResponse(Request $request): JsonResponse
+    {
+        $tasks = $this->getListOfTasks();
+
+        return response()->json([
+            'fields' => Task::$listFields,
+            'items'  => $tasks
         ]);
     }
 
