@@ -101,11 +101,7 @@ class TaskController extends Controller
             $builder = $this->getTasksBasedOnFilter($builder, request()->input('filter'));
         }
 
-        $tasks = ($builder->count() > 0)
-            ? $builder->paginate((int) request()->input('resultsPerPage'))
-            : [];
-
-        return $tasks;
+        return $builder->paginate((int) request()->input('resultsPerPage'));
     }
 
     /**

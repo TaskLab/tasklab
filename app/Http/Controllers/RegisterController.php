@@ -77,7 +77,7 @@ class RegisterController extends Controller
             'password' => Hash::make($payload['password'])
         ]);
 
-        (new Organization)->createNewOrg($payload['organization'], $user->id);
+        Organization::createNewOrg($payload['organization'], $user->id);
 
         return $user;
     }

@@ -50,7 +50,7 @@ class OrganizationController extends Controller
     {
         $options = $request->json()->all();
         if ($options['is_org']) {
-            (new Organization)->createNewOrg($options['value'], Auth::user()->id);
+            Organization::createNewOrg($options['value'], Auth::user()->id);
         } else {
             $org = Organization::whereHas('organizationSetting', function (Builder $query) use ($request) {
                 $query->where('org_key', $options['value']);

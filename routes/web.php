@@ -7,7 +7,8 @@ use App\Http\Controllers\{
     LoginController,
     RegisterController,
     TaskController,
-    OrganizationController
+    OrganizationController,
+    OrganizationSettingsController
 };
 
 use Illuminate\Http\{
@@ -49,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
     /** ORGANIZATION ROUTES  **/
     Route::prefix('org')->group(function () {
+        Route::get('settings', [OrganizationSettingsController::class, 'index']);
         Route::post('create', [OrganizationController::class, 'create']);
         Route::get('delete/{orgId}', [OrganizationController::class, 'delete']);
     });
