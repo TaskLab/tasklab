@@ -36,10 +36,10 @@ class Organization extends Model
      * @param integer $userId
      * @return boolean
      */
-    public function createNewOrg(string $orgName, int $userId): bool 
+    public static function createNewOrg(string $orgName, int $userId): bool 
     {
         DB::transaction(function () use ($orgName, $userId): void {
-            $orgKey = $this->getRandomOrgKey();
+            $orgKey = self::getRandomOrgKey();
             $orgSetting = OrganizationSetting::create([
                 'point_of_contact_id' => $userId,
                 'org_key'             => $orgKey
@@ -86,7 +86,7 @@ class Organization extends Model
      *
      * @return string
      */
-    private function getRandomOrgKey(): string 
+    private static function getRandomOrgKey(): string 
     {
         $random = Str::random(8);
         while (OrganizationSetting::where('org_key', $random)->exists()) {
